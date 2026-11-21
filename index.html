@@ -45,6 +45,44 @@
   </div>
 
   <div class="card">
+    <h2>Dars tugashidan oldin ketgan o‘quvchini qayd etish</h2>
+    <div class="early-form">
+      <div class="field"><label for="earlyCls">Sinf *</label><select id="earlyCls"><option value="">— Sinf —</option></select></div>
+      <div class="field"><label for="earlyName">O‘quvchi F.I.SH. *</label><select id="earlyName" disabled><option value="">Avval sinfni tanlang</option></select></div>
+      <div class="field"><label for="earlyDate">Sana *</label><input type="date" id="earlyDate"></div>
+      <div class="field"><label for="earlyTime">Ketgan vaqti *</label><input type="time" id="earlyTime"></div>
+      <div class="field early-note"><label for="earlyNote">Izoh (ixtiyoriy)</label><input id="earlyNote" placeholder="Masalan, shifokor qabuliga"></div>
+      <div class="field early-photo-field">
+        <label>Ruxsatnoma yoki tasdiqlovchi hujjat surati *</label>
+        <input id="earlyPhotoFile" type="file" accept="image/*" capture="environment" hidden>
+        <button class="ghost" id="earlyPhotoBtn" type="button">📷 Suratga olish / tanlash</button>
+        <img id="earlyPhotoPreview" class="early-photo-preview" alt="Tanlangan hujjat surati" hidden>
+      </div>
+      <button class="primary early-add" id="earlyAdd" type="button">+ Erta ketganni qayd etish</button>
+    </div>
+    <div class="msg" id="earlyMsg"></div>
+  </div>
+
+  <div class="card">
+    <h2>Erta ketganlar ro‘yxati</h2>
+    <div class="bar">
+      <div class="grow"><label for="earlyListDate">Ro‘yxat sanasi</label><input type="date" id="earlyListDate"></div>
+      <div class="count" id="earlyCount"></div>
+    </div>
+    <div class="list">
+      <table>
+        <thead><tr><th>№</th><th>F.I.SH.</th><th>Sinf</th><th>Sana va vaqt</th><th>Izoh</th><th>Hujjat</th><th></th></tr></thead>
+        <tbody id="earlyRows"></tbody>
+      </table>
+      <div class="empty" id="earlyEmpty">Bu kuni erta ketganlar qayd etilmagan.</div>
+    </div>
+    <div class="bar actions-bar">
+      <button class="primary" id="earlyDl" type="button">Ro‘yxat va suratlarni Excelga yuklab olish</button>
+    </div>
+    <div class="msg" id="earlyListMsg"></div>
+  </div>
+
+  <div class="card">
     <div class="bar">
       <div class="grow"><label for="date">Ro’yxat sanasi</label><input type="date" id="date"></div>
       <div class="count" id="count"></div>
@@ -64,7 +102,7 @@
 
   <div class="card">
     <h2>Jarimaga tortilganlar</h2>
-    <p class="sub fines-description">Bir haftada (dushanba–yakshanba) 2 va undan ko’p marta sababsiz kech qolganlar. Sababli kech qolganlar jarimaga hisoblanmaydi. Quyidagi “Hafta” tanloviga qarab ko’rsatiladi.</p>
+    <p class="sub fines-description">Bir haftada (dushanba–yakshanba) 4 va undan ko’p marta sababsiz kech qolganlar. Sababli kech qolganlar jarimaga hisoblanmaydi. Quyidagi “Hafta” tanloviga qarab ko’rsatiladi.</p>
     <div id="fines"></div>
   </div>
 
@@ -77,6 +115,7 @@
   </div>
 </main>
 <script src="xlsx.full.min.js"></script>
+<script src="exceljs.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

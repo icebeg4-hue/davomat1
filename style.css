@@ -252,6 +252,21 @@ input,select{border-color:var(--line)}input:focus,select:focus{border-color:#8b8
 .fines-description{margin-bottom:8px}
 .dl-all{width:100%;margin-bottom:8px}
 .rk-total{color:var(--muted)}
+.early-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.early-form .field{min-width:0}
+.early-form input,.early-form select{width:100%;min-height:44px}
+.early-note,.early-photo-field,.early-add{grid-column:1/-1}
+.early-photo-field{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.early-photo-preview{max-width:100%;max-height:240px;object-fit:contain;border:1px solid var(--line);border-radius:10px}
+.early-photo-thumb{width:64px;height:64px;object-fit:cover;border-radius:6px}
+.early-add{width:100%}
+@media(max-width:700px){
+  .early-form{grid-template-columns:minmax(0,1fr)}
+  .early-note,.early-photo-field,.early-add{grid-column:1}
+  #earlyRows td:nth-child(5){grid-column:2/4;grid-row:3}
+  #earlyRows td:nth-child(6){grid-column:2;grid-row:4}
+  #earlyRows td:nth-child(7){grid-column:3;grid-row:1/span 2}
+}
 
 
 

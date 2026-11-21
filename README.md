@@ -7,6 +7,8 @@ Kechikkan o‘quvchilarni sinf, sana, vaqt va sabab bo‘yicha qayd etuvchi mobi
 - `index.html` - sahifa HTML tuzilmasi.
 - `style.css` - barcha dizayn va mobil moslashuv qoidalari.
 - `script.js` - ma’lumotlar, ro‘yxat, statistika, Excel eksporti va saqlash logikasi.
+- `exceljs.min.js` - ruxsatnoma suratlari qo‘shilgan Excel fayllarini yaratish uchun ExcelJS kutubxonasi.
+- `EXCELJS-LICENSE.txt` - ExcelJS litsenziya matni.
 - `README.md` - loyiha yo‘riqnoma.
 
 ## Ishga tushirish
@@ -19,6 +21,8 @@ Kechikkan o‘quvchilarni sinf, sana, vaqt va sabab bo‘yicha qayd etuvchi mobi
 
 - O‘quvchini sinf, sana, vaqt va sabab holati bilan qo‘shish.
 - Bugungi, haftalik va barcha vaqt statistikasi.
-- Haftada 2 marta va undan ko‘p sababsiz kech qolganlarni aniqlash.
+- Haftada 4 marta va undan ko‘p sababsiz kech qolganlarni aniqlash.
+- Dars tugashidan oldin ketgan o‘quvchilarni alohida qayd etish va ruxsatnoma suratini Excel fayliga joylash.
+- Mahalliy saqlashda erta ketganlar ro‘yxati localStorage’da, suratlar IndexedDB’da saqlanadi; umumiy baza ishlatilganda ikkalasi ham bazada saqlanadi.
 - Excel (`.xlsx`) faylga ro‘yxat eksporti.
 - Mobil va desktop ekranlar uchun mos dizayn.
