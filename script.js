@@ -5,8 +5,130 @@ const today = () => { const d = new Date(); return d.getFullYear() + "-" + pad(d
 const nowStr = () => { const n = new Date(); return pad(n.getHours()) + ":" + pad(n.getMinutes()); };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const fmtD = d => d.split("-").reverse().join(".");
+const WHEEL_MONTHS = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
+let wheelInputs = {}, activeWheelInput = null, wheelState = null, wheelScrollTimer = null;
 const keyOf = r => (r.name || "").trim().toLowerCase().replace(/\s+/g, " ") + "|" + (r.cls || "").trim().toLowerCase();
 const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+
+function refreshWheelDisplay(id) {
+  const entry = wheelInputs[id];
+  if (!entry) return;
+  const parts = entry.input.value.split(/[-:]/).map(Number);
+  entry.trigger.textContent = entry.input.type === "date" ?
+    pad(parts[2]) + "." + pad(parts[1]) + "." + parts[0] :
+    pad(parts[0]) + ":" + pad(parts[1]);
+}
+function closeWheelPicker() {
+  if (!activeWheelInput) return;
+  const input = activeWheelInput;
+  $("wheelBackdrop").hidden = true;
+  document.body.classList.remove("wheel-modal-open");
+  document.removeEventListener("keydown", onWheelKeydown);
+  activeWheelInput = null;
+  wheelState = null;
+  wheelInputs[input.id].trigger.focus();
+}
+function onWheelKeydown(e) {
+  if (e.key === "Escape") closeWheelPicker();
+}
+function wheelDaysInMonth() { return new Date(wheelState.year, wheelState.month, 0).getDate(); }
+function renderWheelColumns() {
+  const isDate = activeWheelInput.type === "date", columns = $("wheelColumns");
+  columns.classList.toggle("time-columns", !isDate);
+  const defs = isDate ? [
+    { key: "day", label: "Kun", values: Array.from({ length: wheelDaysInMonth() }, (_, i) => i + 1), format: pad },
+    { key: "month", label: "Oy", values: Array.from({ length: 12 }, (_, i) => i + 1), format: v => WHEEL_MONTHS[v - 1] },
+    { key: "year", label: "Yil", values: Array.from({ length: Math.max(new Date().getFullYear() + 2, wheelState.year) - Math.min(new Date().getFullYear() - 10, wheelState.year) + 1 }, (_, i) => Math.min(new Date().getFullYear() - 10, wheelState.year) + i), format: String }
+  ] : [
+    { key: "hour", label: "Soat", values: Array.from({ length: 24 }, (_, i) => i), format: pad },
+    { key: "minute", label: "Daqiqa", values: Array.from({ length: 60 }, (_, i) => i), format: pad }
+  ];
+  columns.innerHTML = defs.map(def => {
+    const selected = wheelState[def.key];
+    return "<div class='wheel-unit'><div class='wheel-label'>" + def.label + "</div><div class='wheel-column' role='listbox' aria-label='" + def.label + "' data-key='" + def.key + "'>" +
+      def.values.map((value, i) => "<button type='button' class='wheel-item" + (value === selected ? " selected" : "") + "' role='option' aria-selected='" + (value === selected) + "' data-index='" + i + "' data-value='" + value + "'>" + def.format(value) + "</button>").join("") +
+      "</div></div>";
+  }).join("");
+  columns.querySelectorAll(".wheel-column").forEach(column => {
+    const key = column.dataset.key, def = defs.find(d => d.key === key);
+    column.scrollTop = def.values.indexOf(wheelState[key]) * 44;
+    column.addEventListener("scroll", () => {
+      clearTimeout(wheelScrollTimer);
+      wheelScrollTimer = setTimeout(() => {
+        if (!columns.contains(column)) return;
+        const index = Math.max(0, Math.min(def.values.length - 1, Math.round(column.scrollTop / 44)));
+        updateWheelPart(key, def.values[index]);
+      }, 120);
+    });
+    column.addEventListener("click", e => {
+      const item = e.target.closest(".wheel-item");
+      if (item) updateWheelPart(key, Number(item.dataset.value));
+    });
+  });
+}
+function updateWheelPart(key, value) {
+  if (!wheelState || wheelState[key] === value) return;
+  wheelState[key] = value;
+  if (activeWheelInput.type === "date" && wheelState.day > wheelDaysInMonth()) wheelState.day = wheelDaysInMonth();
+  renderWheelColumns();
+}
+function openWheelPicker(input) {
+  activeWheelInput = input;
+  if (input.type === "date") {
+    const parts = (input.value || today()).split("-").map(Number);
+    wheelState = { year: parts[0], month: parts[1], day: parts[2] };
+    $("wheelTitle").textContent = "Sana tanlash";
+  } else {
+    const parts = (input.value || nowStr()).split(":").map(Number);
+    wheelState = { hour: parts[0], minute: parts[1] };
+    $("wheelTitle").textContent = "Vaqt tanlash";
+  }
+  document.body.classList.add("wheel-modal-open");
+  $("wheelBackdrop").hidden = false;
+  renderWheelColumns();
+  document.addEventListener("keydown", onWheelKeydown);
+  $("wheelCancel").focus();
+}
+function applyWheelSelection() {
+  if (!activeWheelInput) return;
+  activeWheelInput.value = activeWheelInput.type === "date" ?
+    wheelState.year + "-" + pad(wheelState.month) + "-" + pad(wheelState.day) :
+    pad(wheelState.hour) + ":" + pad(wheelState.minute);
+  activeWheelInput.dispatchEvent(new Event("input", { bubbles: true }));
+  activeWheelInput.dispatchEvent(new Event("change", { bubbles: true }));
+  closeWheelPicker();
+}
+function initAndroidWheelPickers() {
+  if (!/Android/i.test(navigator.userAgent)) return;
+  document.body.classList.add("android-wheel-picker");
+  ["fdate", "date", "earlyDate", "earlyListDate", "time", "earlyTime"].forEach(id => {
+    const input = $(id), isDate = input.type === "date";
+    let wrapper = input.parentElement;
+    if (!wrapper.classList.contains(isDate ? "date-wrap" : "time-wrap")) {
+      wrapper = document.createElement("div");
+      wrapper.className = isDate ? "date-wrap" : "time-wrap";
+      input.parentNode.insertBefore(wrapper, input);
+      wrapper.appendChild(input);
+    }
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.id = id + "WheelTrigger";
+    trigger.className = "wheel-picker-trigger";
+    trigger.setAttribute("aria-label", isDate ? "Sanani tanlash" : "Vaqtni tanlash");
+    input.classList.add("wheel-picker-source");
+    input.tabIndex = -1;
+    input.insertAdjacentElement("afterend", trigger);
+    const label = document.querySelector("label[for='" + id + "']");
+    if (label) label.htmlFor = trigger.id;
+    wheelInputs[id] = { input, trigger };
+    refreshWheelDisplay(id);
+    input.addEventListener("change", () => refreshWheelDisplay(id));
+    trigger.addEventListener("click", () => openWheelPicker(input));
+  });
+  $("wheelCancel").onclick = closeWheelPicker;
+  $("wheelApply").onclick = applyWheelSelection;
+  $("wheelBackdrop").onclick = e => { if (e.target === $("wheelBackdrop")) closeWheelPicker(); };
+}
 function makeXlsx(rows, sheet) {
   if (typeof XLSX === "undefined") throw new Error("xlsx");
   const ws = XLSX.utils.aoa_to_sheet(rows);
@@ -119,12 +241,14 @@ async function addEarlyRec(r) {
   r.id = Date.now() + "" + Math.floor(Math.random() * 1000);
   if (mode === "db") await earlyCol.doc(r.id).set(r);
   else {
-    const photo = r.photo;
-    await storeEarlyPhoto(r.id, photo, "put");
-    earlyRecords.push({ id: r.id, name: r.name, cls: r.cls, date: r.date, time: r.time, note: r.note, photoKey: r.id });
+    const photo = r.photo || "";
+    if (photo) await storeEarlyPhoto(r.id, photo, "put");
+    const record = { id: r.id, name: r.name, cls: r.cls, date: r.date, time: r.time, note: r.note };
+    if (photo) record.photoKey = r.id;
+    earlyRecords.push(record);
     try { saveEarlyLocal(); } catch (e) {
       earlyRecords.pop();
-      await storeEarlyPhoto(r.id, null, "delete");
+      if (photo) await storeEarlyPhoto(r.id, null, "delete");
       throw e;
     }
     renderEarlyList();
@@ -202,7 +326,8 @@ function renderAll(cnt) {
 $("date").value = today();
 $("fdate").value = today();
 $("time").value = nowStr();
-$("now").onclick = () => { $("fdate").value = today(); $("time").value = nowStr(); };
+$("today").onclick = () => { $("fdate").value = today(); refreshWheelDisplay("fdate"); };
+$("now").onclick = () => { $("fdate").value = today(); $("time").value = nowStr(); refreshWheelDisplay("fdate"); refreshWheelDisplay("time"); };
 $("yes").onclick = () => setExcused(true);
 $("no").onclick = () => setExcused(false);
 
@@ -216,7 +341,8 @@ $("add").onclick = async () => {
   try { await addRec(rec); } catch (e) { say("Saqlab bo’lmadi. Ruxsat yoki internetni tekshiring.", true); return; }
   populateNames(); $("reasonText").value = "";
   setExcused(null); $("fdate").value = today(); $("time").value = nowStr(); $("name").focus();
-  $("date").value = rec.date; render();
+  refreshWheelDisplay("fdate"); refreshWheelDisplay("time");
+  $("date").value = rec.date; refreshWheelDisplay("date"); render();
   if (rec.excused !== true && n >= FINE_THRESHOLD) say(name + " shu hafta " + n + "-marta sababsiz kech qoldi — JARIMA!", true); else say(name + (rec.excused ? " sababli deb belgilandi — jarimasiz." : " belgilandi."));
 };
 
@@ -367,7 +493,6 @@ $("earlyPhotoFile").onchange = async e => {
 $("earlyAdd").onclick = async () => {
   const name = $("earlyName").value, cls = $("earlyCls").value;
   if (!cls || !name) { $("earlyMsg").textContent = "Sinf va o‘quvchini tanlang."; $("earlyMsg").className = "msg err"; return; }
-  if (!earlyPhotoData) { $("earlyMsg").textContent = "Ruxsatnoma yoki tasdiqlovchi hujjat suratini oling."; $("earlyMsg").className = "msg err"; return; }
   const record = {
     name, cls, date: $("earlyDate").value || today(), time: $("earlyTime").value || nowStr(),
     note: $("earlyNote").value.trim(), photo: earlyPhotoData
@@ -375,6 +500,7 @@ $("earlyAdd").onclick = async () => {
   try {
     await addEarlyRec(record);
     $("earlyListDate").value = record.date;
+    refreshWheelDisplay("earlyListDate");
     renderEarlyList();
     $("earlyMsg").textContent = "Erta ketgan o‘quvchi qayd etildi.";
     $("earlyMsg").className = "msg";
@@ -417,14 +543,16 @@ $("earlyDl").onclick = async () => {
       const row = sheet.addRow({ number: i + 1, name: r.name, class: r.cls, date: fmtD(r.date), time: r.time, note: r.note || "" });
       row.height = 58;
       const photo = r.photo || (r.photoKey ? await storeEarlyPhoto(r.photoKey, null, "get") : "");
-      if (!photo) throw new Error("Hujjat suratlaridan biri topilmadi.");
-      const imageId = workbook.addImage({ base64: photo, extension: "jpeg" });
-      sheet.addImage(imageId, { tl: { col: 6, row: row.number - 1 }, ext: { width: 94, height: 72 } });
+      if (r.photoKey && !photo) throw new Error("Hujjat suratlaridan biri topilmadi.");
+      if (photo) {
+        const imageId = workbook.addImage({ base64: photo, extension: "jpeg" });
+        sheet.addImage(imageId, { tl: { col: 6, row: row.number - 1 }, ext: { width: 94, height: 72 } });
+      }
     }
     sheet.getRow(1).font = { bold: true };
     const data = await workbook.xlsx.writeBuffer();
     await downloadXlsx("erta_ketganlar_" + day + ".xlsx", data);
-    msg.textContent = "Excel fayli, hujjat suratlari bilan, saqlandi.";
+    msg.textContent = "Excel fayli, mavjud hujjat suratlari bilan, saqlandi.";
     msg.className = "msg";
   } catch (err) {
     msg.textContent = err.message || "Excel faylini tayyorlab bo‘lmadi.";
@@ -435,6 +563,9 @@ $("earlyDl").onclick = async () => {
 $("earlyDate").value = today();
 $("earlyTime").value = nowStr();
 $("earlyListDate").value = today();
+$("earlyToday").onclick = () => { $("earlyDate").value = today(); refreshWheelDisplay("earlyDate"); };
+$("earlyNow").onclick = () => { $("earlyDate").value = today(); $("earlyTime").value = nowStr(); refreshWheelDisplay("earlyDate"); refreshWheelDisplay("earlyTime"); };
+initAndroidWheelPickers();
 loadEarlyLocal();
 renderEarlyList();
 
@@ -487,7 +618,7 @@ function weekCheck() {
 $("wkbtn").onclick = () => { const p = pendingWeeks(); if (p.length) exportWeek(p[0]); };
 setInterval(() => {
   const cw = weekStart(today());
-  if (cw !== lastCW) { if (selWeek === lastCW) selWeek = cw; lastCW = cw; $("date").value = today(); $("fdate").value = today(); render(); }
+  if (cw !== lastCW) { if (selWeek === lastCW) selWeek = cw; lastCW = cw; $("date").value = today(); $("fdate").value = today(); refreshWheelDisplay("date"); refreshWheelDisplay("fdate"); render(); }
   else { weekCheck(); renderStats(); }
 }, 60000);
 

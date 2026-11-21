@@ -22,7 +22,8 @@ Kechikkan o‘quvchilarni sinf, sana, vaqt va sabab bo‘yicha qayd etuvchi mobi
 - O‘quvchini sinf, sana, vaqt va sabab holati bilan qo‘shish.
 - Bugungi, haftalik va barcha vaqt statistikasi.
 - Haftada 4 marta va undan ko‘p sababsiz kech qolganlarni aniqlash.
-- Dars tugashidan oldin ketgan o‘quvchilarni alohida qayd etish va ruxsatnoma suratini Excel fayliga joylash.
+- Dars tugashidan oldin ketgan o‘quvchilarni alohida qayd etish va ixtiyoriy ruxsatnoma suratini Excel fayliga joylash.
+- Android telefonlarda iPhone uslubidagi aylantirib sana va vaqt tanlash oynasi; “Bugun” va “Hozir” tezkor tugmalari.
 - Mahalliy saqlashda erta ketganlar ro‘yxati localStorage’da, suratlar IndexedDB’da saqlanadi; umumiy baza ishlatilganda ikkalasi ham bazada saqlanadi.
 - Excel (`.xlsx`) faylga ro‘yxat eksporti.
 - Mobil va desktop ekranlar uchun mos dizayn.
