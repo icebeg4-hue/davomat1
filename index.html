@@ -20,13 +20,13 @@
     <div class="msg err" id="wkmsg"></div>
   </div>
 
-  <div class="stats dashboard-stats">
-      <div class="st"><b id="stToday">0</b><span>bugun kech qolgan</span></div>
-      <div class="st"><b id="stYes">0</b><span>sababli</span></div>
-      <div class="st"><b id="stNo">0</b><span>sababsiz</span></div>
+  <div class="section-tabs" role="tablist" aria-label="Davomat bo‘limlari">
+    <button class="section-tab active" id="tabAttendance" type="button" role="tab" aria-selected="true" aria-controls="panelAttendance">Kech qolish</button>
+    <button class="section-tab" id="tabEarly" type="button" role="tab" aria-selected="false" aria-controls="panelEarly" tabindex="-1">Erta ketish</button>
+    <button class="section-tab" id="tabStats" type="button" role="tab" aria-selected="false" aria-controls="panelStats" tabindex="-1">Statistika / jarima</button>
   </div>
-  <div class="card stats-extra"><h2>Bugungi statistika</h2><div class="top"><div id="topCls"></div><div id="rank"></div></div></div>
 
+  <section id="panelAttendance" role="tabpanel" aria-labelledby="tabAttendance" tabindex="0">
   <div class="card entry-card">
     <h2>Yangi o‘quvchini ro‘yxatga olish</h2>
     <div class="field field-class"><label for="cls">Sinf *</label>
@@ -42,44 +42,6 @@
     <div class="field field-add"><label>&nbsp;</label><button class="primary" id="add">+ Qo‘shish</button></div>
     <div class="msg" id="msg"></div>
     <div class="dbs" id="dbstate"></div>
-  </div>
-
-  <div class="card">
-    <h2>Dars tugashidan oldin ketgan o‘quvchini qayd etish</h2>
-    <div class="early-form">
-      <div class="field"><label for="earlyCls">Sinf *</label><select id="earlyCls"><option value="">— Sinf —</option></select></div>
-      <div class="field"><label for="earlyName">O‘quvchi F.I.SH. *</label><select id="earlyName" disabled><option value="">Avval sinfni tanlang</option></select></div>
-      <div class="field"><label for="earlyDate">Sana *</label><div class="date-wrap"><input type="date" id="earlyDate"><button class="ghost" id="earlyToday" type="button">Bugun</button></div></div>
-      <div class="field"><label for="earlyTime">Ketgan vaqti *</label><div class="time-wrap"><input type="time" id="earlyTime"><button class="ghost" id="earlyNow" type="button">Hozir</button></div></div>
-      <div class="field early-note"><label for="earlyNote">Izoh (ixtiyoriy)</label><input id="earlyNote" placeholder="Masalan, shifokor qabuliga"></div>
-      <div class="field early-photo-field">
-        <label>Ruxsatnoma yoki tasdiqlovchi hujjat surati (ixtiyoriy)</label>
-        <input id="earlyPhotoFile" type="file" accept="image/*" capture="environment" hidden>
-        <button class="ghost" id="earlyPhotoBtn" type="button">📷 Suratga olish / tanlash</button>
-        <img id="earlyPhotoPreview" class="early-photo-preview" alt="Tanlangan hujjat surati" hidden>
-      </div>
-      <button class="primary early-add" id="earlyAdd" type="button">+ Erta ketganni qayd etish</button>
-    </div>
-    <div class="msg" id="earlyMsg"></div>
-  </div>
-
-  <div class="card">
-    <h2>Erta ketganlar ro‘yxati</h2>
-    <div class="bar">
-      <div class="grow"><label for="earlyListDate">Ro‘yxat sanasi</label><input type="date" id="earlyListDate"></div>
-      <div class="count" id="earlyCount"></div>
-    </div>
-    <div class="list">
-      <table>
-        <thead><tr><th>№</th><th>F.I.SH.</th><th>Sinf</th><th>Sana va vaqt</th><th>Izoh</th><th>Hujjat</th><th></th></tr></thead>
-        <tbody id="earlyRows"></tbody>
-      </table>
-      <div class="empty" id="earlyEmpty">Bu kuni erta ketganlar qayd etilmagan.</div>
-    </div>
-    <div class="bar actions-bar">
-      <button class="primary" id="earlyDl" type="button">Ro‘yxat va suratlarni Excelga yuklab olish</button>
-    </div>
-    <div class="msg" id="earlyListMsg"></div>
   </div>
 
   <div class="card">
@@ -101,18 +63,66 @@
   </div>
 
   <div class="card">
-    <h2>Jarimaga tortilganlar</h2>
-    <p class="sub fines-description">Bir haftada (dushanba–yakshanba) 4 va undan ko’p marta sababsiz kech qolganlar. Sababli kech qolganlar jarimaga hisoblanmaydi. Quyidagi “Hafta” tanloviga qarab ko’rsatiladi.</p>
-    <div id="fines"></div>
-  </div>
-
-  <div class="card">
     <h2>Barcha sanalardagi kech qolganlar</h2>
     <div class="bar"><div class="grow"><label for="wsel">Hafta</label><select id="wsel"></select></div><div class="count" id="allcount"></div></div>
     <button class="ghost dl-all" id="dlall">Tanlangan haftani yuklab olish (Excel)</button>
     <div id="alllist"></div>
     <div class="msg" id="msg2"></div>
   </div>
+  </section>
+
+  <section id="panelEarly" role="tabpanel" aria-labelledby="tabEarly" tabindex="0" hidden>
+    <div class="card">
+      <h2>Dars tugashidan oldin ketgan o‘quvchini qayd etish</h2>
+      <div class="early-form">
+        <div class="field"><label for="earlyCls">Sinf *</label><select id="earlyCls"><option value="">— Sinf —</option></select></div>
+        <div class="field"><label for="earlyName">O‘quvchi F.I.SH. *</label><select id="earlyName" disabled><option value="">Avval sinfni tanlang</option></select></div>
+        <div class="field"><label for="earlyDate">Sana *</label><div class="date-wrap"><input type="date" id="earlyDate"><button class="ghost" id="earlyToday" type="button">Bugun</button></div></div>
+        <div class="field"><label for="earlyTime">Ketgan vaqti *</label><div class="time-wrap"><input type="time" id="earlyTime"><button class="ghost" id="earlyNow" type="button">Hozir</button></div></div>
+        <div class="field early-note"><label for="earlyNote">Izoh (ixtiyoriy)</label><input id="earlyNote" placeholder="Masalan, shifokor qabuliga"></div>
+        <div class="field early-photo-field">
+          <label>Ruxsatnoma yoki tasdiqlovchi hujjat surati (ixtiyoriy)</label>
+          <input id="earlyPhotoFile" type="file" accept="image/*" capture="environment" hidden>
+          <button class="ghost" id="earlyPhotoBtn" type="button">📷 Suratga olish / tanlash</button>
+          <img id="earlyPhotoPreview" class="early-photo-preview" alt="Tanlangan hujjat surati" hidden>
+        </div>
+        <button class="primary early-add" id="earlyAdd" type="button">+ Erta ketganni qayd etish</button>
+      </div>
+      <div class="msg" id="earlyMsg"></div>
+    </div>
+    <div class="card">
+      <h2>Erta ketganlar ro‘yxati</h2>
+      <div class="bar">
+        <div class="grow"><label for="earlyListDate">Ro‘yxat sanasi</label><input type="date" id="earlyListDate"></div>
+        <div class="count" id="earlyCount"></div>
+      </div>
+      <div class="list">
+        <table>
+          <thead><tr><th>№</th><th>F.I.SH.</th><th>Sinf</th><th>Sana va vaqt</th><th>Izoh</th><th>Hujjat</th><th></th></tr></thead>
+          <tbody id="earlyRows"></tbody>
+        </table>
+        <div class="empty" id="earlyEmpty">Bu kuni erta ketganlar qayd etilmagan.</div>
+      </div>
+      <div class="bar actions-bar">
+        <button class="primary" id="earlyDl" type="button">Ro‘yxat va suratlarni Excelga yuklab olish</button>
+      </div>
+      <div class="msg" id="earlyListMsg"></div>
+    </div>
+  </section>
+
+  <section id="panelStats" role="tabpanel" aria-labelledby="tabStats" tabindex="0" hidden>
+    <div class="stats dashboard-stats">
+      <div class="st"><b id="stToday">0</b><span>bugun kech qolgan</span></div>
+      <div class="st"><b id="stYes">0</b><span>sababli</span></div>
+      <div class="st"><b id="stNo">0</b><span>sababsiz</span></div>
+    </div>
+    <div class="card stats-extra"><h2>Bugungi statistika</h2><div class="top"><div id="topCls"></div><div id="rank"></div></div></div>
+    <div class="card">
+      <h2>Jarimaga tortilganlar</h2>
+      <p class="sub fines-description">Bir haftada (dushanba–yakshanba) 4 va undan ko’p marta sababsiz kech qolganlar. Sababli kech qolganlar jarimaga hisoblanmaydi. Quyidagi “Hafta” tanloviga qarab ko’rsatiladi.</p>
+      <div id="fines"></div>
+    </div>
+  </section>
 </main>
 <div class="wheel-backdrop" id="wheelBackdrop" hidden>
   <section class="wheel-dialog" role="dialog" aria-modal="true" aria-labelledby="wheelTitle">

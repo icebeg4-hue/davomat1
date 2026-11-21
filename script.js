@@ -10,9 +10,46 @@ let wheelInputs = {}, activeWheelInput = null, wheelState = null, wheelScrollTim
 const keyOf = r => (r.name || "").trim().toLowerCase().replace(/\s+/g, " ") + "|" + (r.cls || "").trim().toLowerCase();
 const q = v => '"' + String(v).replace(/"/g, '""') + '"';
 
+function activateSection(tabId, focusTab) {
+  const tabs = Array.from(document.querySelectorAll(".section-tab"));
+  tabs.forEach(tab => {
+    const active = tab.id === tabId;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", String(active));
+    tab.tabIndex = active ? 0 : -1;
+    $(tab.getAttribute("aria-controls")).hidden = !active;
+  });
+  if (focusTab) $(tabId).focus();
+  window.scrollTo(0, 0);
+}
+const sectionTabList = document.querySelector(".section-tabs");
+sectionTabList.addEventListener("click", e => {
+  const tab = e.target.closest(".section-tab");
+  if (tab) activateSection(tab.id, false);
+});
+sectionTabList.addEventListener("keydown", e => {
+  const tabs = Array.from(sectionTabList.querySelectorAll(".section-tab"));
+  const current = tabs.indexOf(document.activeElement);
+  if (current < 0) return;
+  let next = current;
+  if (e.key === "ArrowRight") next = (current + 1) % tabs.length;
+  else if (e.key === "ArrowLeft") next = (current + tabs.length - 1) % tabs.length;
+  else if (e.key === "Home") next = 0;
+  else if (e.key === "End") next = tabs.length - 1;
+  else return;
+  e.preventDefault();
+  activateSection(tabs[next].id, true);
+});
+
 function refreshWheelDisplay(id) {
   const entry = wheelInputs[id];
   if (!entry) return;
+  if (entry.input.tagName === "SELECT") {
+    const option = entry.input.options[entry.input.selectedIndex];
+    entry.trigger.textContent = option ? option.textContent : "";
+    entry.trigger.disabled = entry.input.disabled;
+    return;
+  }
   const parts = entry.input.value.split(/[-:]/).map(Number);
   entry.trigger.textContent = entry.input.type === "date" ?
     pad(parts[2]) + "." + pad(parts[1]) + "." + parts[0] :
@@ -33,12 +70,17 @@ function onWheelKeydown(e) {
 }
 function wheelDaysInMonth() { return new Date(wheelState.year, wheelState.month, 0).getDate(); }
 function renderWheelColumns() {
-  const isDate = activeWheelInput.type === "date", columns = $("wheelColumns");
-  columns.classList.toggle("time-columns", !isDate);
+  const isDate = activeWheelInput.type === "date";
+  const isSelect = activeWheelInput.tagName === "SELECT";
+  const columns = $("wheelColumns");
+  columns.classList.toggle("time-columns", !isDate && !isSelect);
+  columns.classList.toggle("select-columns", isSelect);
   const defs = isDate ? [
     { key: "day", label: "Kun", values: Array.from({ length: wheelDaysInMonth() }, (_, i) => i + 1), format: pad },
     { key: "month", label: "Oy", values: Array.from({ length: 12 }, (_, i) => i + 1), format: v => WHEEL_MONTHS[v - 1] },
     { key: "year", label: "Yil", values: Array.from({ length: Math.max(new Date().getFullYear() + 2, wheelState.year) - Math.min(new Date().getFullYear() - 10, wheelState.year) + 1 }, (_, i) => Math.min(new Date().getFullYear() - 10, wheelState.year) + i), format: String }
+  ] : isSelect ? [
+    { key: "optionIndex", label: activeWheelInput.id.indexOf("Cls") >= 0 || activeWheelInput.id === "cls" ? "Sinf" : "O‘quvchi", values: Array.from({ length: activeWheelInput.options.length }, (_, i) => i), format: i => activeWheelInput.options[i].textContent }
   ] : [
     { key: "hour", label: "Soat", values: Array.from({ length: 24 }, (_, i) => i), format: pad },
     { key: "minute", label: "Daqiqa", values: Array.from({ length: 60 }, (_, i) => i), format: pad }
@@ -46,7 +88,10 @@ function renderWheelColumns() {
   columns.innerHTML = defs.map(def => {
     const selected = wheelState[def.key];
     return "<div class='wheel-unit'><div class='wheel-label'>" + def.label + "</div><div class='wheel-column' role='listbox' aria-label='" + def.label + "' data-key='" + def.key + "'>" +
-      def.values.map((value, i) => "<button type='button' class='wheel-item" + (value === selected ? " selected" : "") + "' role='option' aria-selected='" + (value === selected) + "' data-index='" + i + "' data-value='" + value + "'>" + def.format(value) + "</button>").join("") +
+      def.values.map((value, i) => {
+        const label = String(def.format(value));
+        return "<button type='button' class='wheel-item" + (value === selected ? " selected" : "") + "' role='option' aria-selected='" + (value === selected) + "' title='" + esc(label) + "' data-index='" + i + "' data-value='" + value + "'>" + esc(label) + "</button>";
+      }).join("") +
       "</div></div>";
   }).join("");
   columns.querySelectorAll(".wheel-column").forEach(column => {
@@ -74,7 +119,10 @@ function updateWheelPart(key, value) {
 }
 function openWheelPicker(input) {
   activeWheelInput = input;
-  if (input.type === "date") {
+  if (input.tagName === "SELECT") {
+    wheelState = { optionIndex: Math.max(0, input.selectedIndex) };
+    $("wheelTitle").textContent = input.id.indexOf("Cls") >= 0 || input.id === "cls" ? "Sinf tanlash" : "O‘quvchini tanlash";
+  } else if (input.type === "date") {
     const parts = (input.value || today()).split("-").map(Number);
     wheelState = { year: parts[0], month: parts[1], day: parts[2] };
     $("wheelTitle").textContent = "Sana tanlash";
@@ -91,7 +139,8 @@ function openWheelPicker(input) {
 }
 function applyWheelSelection() {
   if (!activeWheelInput) return;
-  activeWheelInput.value = activeWheelInput.type === "date" ?
+  if (activeWheelInput.tagName === "SELECT") activeWheelInput.selectedIndex = wheelState.optionIndex;
+  else activeWheelInput.value = activeWheelInput.type === "date" ?
     wheelState.year + "-" + pad(wheelState.month) + "-" + pad(wheelState.day) :
     pad(wheelState.hour) + ":" + pad(wheelState.minute);
   activeWheelInput.dispatchEvent(new Event("input", { bubbles: true }));
@@ -101,12 +150,13 @@ function applyWheelSelection() {
 function initAndroidWheelPickers() {
   if (!/Android/i.test(navigator.userAgent)) return;
   document.body.classList.add("android-wheel-picker");
-  ["fdate", "date", "earlyDate", "earlyListDate", "time", "earlyTime"].forEach(id => {
-    const input = $(id), isDate = input.type === "date";
+  ["fdate", "date", "earlyDate", "earlyListDate", "time", "earlyTime", "cls", "name", "earlyCls", "earlyName"].forEach(id => {
+    const input = $(id), isDate = input.type === "date", isSelect = input.tagName === "SELECT";
     let wrapper = input.parentElement;
-    if (!wrapper.classList.contains(isDate ? "date-wrap" : "time-wrap")) {
+    const wrapperClass = isSelect ? "select-wrap" : isDate ? "date-wrap" : "time-wrap";
+    if (!wrapper.classList.contains(wrapperClass)) {
       wrapper = document.createElement("div");
-      wrapper.className = isDate ? "date-wrap" : "time-wrap";
+      wrapper.className = wrapperClass;
       input.parentNode.insertBefore(wrapper, input);
       wrapper.appendChild(input);
     }
@@ -114,7 +164,9 @@ function initAndroidWheelPickers() {
     trigger.type = "button";
     trigger.id = id + "WheelTrigger";
     trigger.className = "wheel-picker-trigger";
-    trigger.setAttribute("aria-label", isDate ? "Sanani tanlash" : "Vaqtni tanlash");
+    trigger.setAttribute("aria-label", isSelect ?
+      (id.indexOf("Cls") >= 0 || id === "cls" ? "Sinfni tanlash" : "O‘quvchini tanlash") :
+      isDate ? "Sanani tanlash" : "Vaqtni tanlash");
     input.classList.add("wheel-picker-source");
     input.tabIndex = -1;
     input.insertAdjacentElement("afterend", trigger);
@@ -392,7 +444,7 @@ Object.keys(ROSTER).forEach(c => { const o = document.createElement("option"); o
 function populateNames() {
   const cls = $("cls").value, nameSelect = $("name");
   nameSelect.innerHTML = '<option value="">— O‘quvchini tanlang —</option>';
-  if (!cls) { nameSelect.disabled = true; return; }
+  if (!cls) { nameSelect.disabled = true; refreshWheelDisplay("name"); return; }
   const done = {};
   all.forEach(r => { if (r.date === today() && r.cls === cls) done[norm(r.name)] = true; });
   ROSTER[cls].forEach(name => {
@@ -402,6 +454,7 @@ function populateNames() {
     nameSelect.appendChild(option);
   });
   nameSelect.disabled = false;
+  refreshWheelDisplay("name");
 }
 $("cls").addEventListener("change", populateNames);
 
@@ -413,13 +466,14 @@ Object.keys(ROSTER).forEach(c => {
 function populateEarlyNames() {
   const cls = $("earlyCls").value, nameSelect = $("earlyName");
   nameSelect.innerHTML = '<option value="">— O‘quvchini tanlang —</option>';
-  if (!cls) { nameSelect.disabled = true; return; }
+  if (!cls) { nameSelect.disabled = true; refreshWheelDisplay("earlyName"); return; }
   ROSTER[cls].forEach(name => {
     const option = document.createElement("option");
     option.value = name; option.textContent = name;
     nameSelect.appendChild(option);
   });
   nameSelect.disabled = false;
+  refreshWheelDisplay("earlyName");
 }
 $("earlyCls").addEventListener("change", populateEarlyNames);
 
