@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kech qolganlar davomati</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f4f6fb;--card:#fff;--text:#1b2233;--muted:#667089;--line:#e2e6f0;--accent:#2457d6;--accent-t:#fff;--danger:#d23b3b;--ok:#17803d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1b202b;--text:#e8ecf5;--muted:#9aa4bb;--line:#2b3242;--accent:#5b8cff;--accent-t:#0c1220;--danger:#ff7676;--ok:#4cd07f}}
+:root[data-theme="dark"]{--bg:#12151c;--card:#1b202b;--text:#e8ecf5;--muted:#9aa4bb;--line:#2b3242;--accent:#5b8cff;--accent-t:#0c1220;--danger:#ff7676;--ok:#4cd07f}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.4;-webkit-text-size-adjust:100%}
+main{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;margin:8px 0 2px}
+h2{font-size:1.05rem;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 16px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:4px}
+input{width:100%;padding:12px;font-size:1rem;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+.row{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:12px}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:12px 16px;font-weight:600;touch-action:manipulation}
+.primary{background:var(--accent);color:var(--accent-t);width:100%;font-size:1.05rem}
+.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.inline{display:flex;gap:10px;margin-bottom:12px}
+.inline input{flex:1;min-width:0}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.seg button.on-yes{background:var(--ok);color:var(--accent-t);border-color:var(--ok)}
+.seg button.on-no{background:var(--danger);color:var(--accent-t);border-color:var(--danger)}
+#reasonText{margin-bottom:12px}
+.bar{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
+.bar .grow{flex:1;min-width:150px}
+.count{font-size:1.1rem;font-weight:700}
+.list{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:.8rem;color:var(--muted);font-weight:600}
+td.name{white-space:normal}
+.del{background:transparent;color:var(--danger);border:1px solid var(--danger);padding:6px 10px;font-size:.85rem}
+.empty{color:var(--muted);text-align:center;padding:20px 0}
+.tag{font-weight:600;font-size:.8rem}
+.tag.yes{color:var(--ok)}
+.tag.no{color:var(--danger)}
+.fine{display:inline-block;background:var(--danger);color:var(--accent-t);border-radius:6px;padding:2px 6px;font-size:.72rem;font-weight:700;white-space:nowrap;margin-left:4px}
+.fr{padding:10px 0;border-bottom:1px solid var(--line)}
+.wk{display:inline-block;background:var(--line);color:var(--text);border-radius:6px;padding:2px 6px;font-size:.72rem;font-weight:700;white-space:nowrap;margin-left:4px}
+.fr small{display:block;color:var(--muted)}
+.dh{font-weight:700;padding:14px 0 4px;border-bottom:2px solid var(--line)}
+.ar{padding:8px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.ai{flex:1;min-width:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.st{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.st b{display:block;font-size:1.6rem}
+.st span{font-size:.75rem;color:var(--muted)}
+.top{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.rk{display:flex;justify-content:space-between;padding:4px 0;font-size:.9rem}
+.res{max-height:240px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
+.res button{display:block;width:100%;text-align:left;background:transparent;color:var(--text);border:0;border-bottom:1px solid var(--line);border-radius:0;font-weight:500;padding:12px;min-height:0}
+.res button:last-child{border-bottom:0}
+.res small{color:var(--muted);margin-left:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chips button{padding:8px 12px;min-height:0;font-size:.85rem;font-weight:500;border-radius:999px}
+.picked{color:var(--ok);font-size:.9rem;margin:0 0 12px;font-weight:600}
+select{width:100%;padding:12px;font-size:1rem;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+.ar small{color:var(--muted)}
+.msg{min-height:1.2em;font-size:.9rem;margin-top:8px;color:var(--ok)}
+.msg.err{color:var(--danger)}
+.dbs{font-size:.8rem;color:var(--muted);margin-top:4px}
+@media (max-width:600px){
+ main{padding:12px}
+ h1{font-size:1.2rem}
+ input,button{font-size:16px}
+ button{min-height:48px}
+ .row{grid-template-columns:1fr;gap:12px}
+ .bar .grow{min-width:0}
+ #dl,#clear{flex:1 1 100%!important}
+ thead{display:none}
+ table,tbody{display:block}
+ tr{display:grid;grid-template-columns:auto auto 1fr auto;gap:4px 10px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center}
+ td{border:0;padding:0;white-space:normal}
+ td.n{grid-column:1;grid-row:1;color:var(--muted);font-weight:600}
+ td.name{grid-column:2 / 4;grid-row:1;font-weight:600}
+ td.act{grid-column:4;grid-row:1 / span 2}
+ td.c{grid-column:2;grid-row:2;color:var(--muted)}
+ td.t{grid-column:3;grid-row:2;color:var(--muted)}
+ td.why{grid-column:2 / 5;grid-row:3}
+ .del{min-height:44px;padding:8px 12px}
+}
+
+/* ===== Monoxrom dizayn va mobil moslashuv ===== */
+:root{
+  --bg:#f1f1f1;
+  --card:#ffffff;
+  --text:#111111;
+  --muted:#666666;
+  --line:#d6d6d6;
+  --accent:#111111;
+  --accent-t:#ffffff;
+  --danger:#555555;
+  --ok:#333333;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101010;--card:#1b1b1b;--text:#f5f5f5;
+    --muted:#b5b5b5;--line:#383838;--accent:#f0f0f0;
+    --accent-t:#111111;--danger:#d0d0d0;--ok:#e0e0e0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101010;--card:#1b1b1b;--text:#f5f5f5;
+  --muted:#b5b5b5;--line:#383838;--accent:#f0f0f0;
+  --accent-t:#111111;--danger:#d0d0d0;--ok:#e0e0e0;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  line-height:1.5;
+}
+main{width:100%;max-width:760px;margin:0 auto;padding:22px 18px 40px}
+h1{font-size:clamp(1.45rem,4vw,1.9rem);font-weight:800;letter-spacing:-.04em;line-height:1.2;margin:10px 0 8px}
+h2{font-size:1.08rem;font-weight:750;letter-spacing:-.02em;margin:0 0 14px}
+.sub{color:var(--muted);font-size:.9rem;line-height:1.55}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:20px;
+  padding:20px;margin:0 0 16px;
+  box-shadow:0 5px 18px rgba(0,0,0,.045);
+}
+label{font-size:.82rem;font-weight:650;color:var(--muted);margin-bottom:7px}
+input,select{
+  min-height:48px;padding:12px 14px;border:1px solid var(--line);
+  border-radius:12px;background:var(--bg);color:var(--text);
+  outline:none;transition:border-color .18s,box-shadow .18s;
+}
+input:focus,select:focus{
+  border-color:var(--text);box-shadow:0 0 0 3px rgba(120,120,120,.16)
+}
+button{
+  min-height:46px;border-radius:12px;padding:11px 16px;
+  font-weight:700;transition:transform .15s,opacity .15s,background .15s;
+}
+button:active{transform:scale(.98)}
+button:focus-visible{outline:3px solid #999;outline-offset:2px}
+.primary{background:var(--accent);color:var(--accent-t);border:1px solid var(--accent)}
+.primary:hover{opacity:.86}
+.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.ghost:hover{background:var(--bg)}
+.seg button{border:1px solid var(--line);background:var(--bg);color:var(--text)}
+.seg button.on-yes,.seg button.on-no{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
+.stats{gap:9px}
+.st{background:var(--bg);border:1px solid var(--line);border-radius:15px;padding:14px 8px}
+.st b{font-size:1.7rem;font-weight:800;letter-spacing:-.04em}
+.st span{display:block;line-height:1.35}
+.top{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px}
+.res{background:var(--card);border-color:var(--line);border-radius:14px}
+.res button:hover{background:var(--bg)}
+.chips button{background:var(--bg);border:1px solid var(--line);color:var(--text)}
+.chips button:hover{background:var(--line)}
+.picked{color:var(--text)}
+.count{font-size:1rem;font-weight:800}
+table{border-collapse:separate;border-spacing:0}
+th{background:var(--bg);padding:12px 9px}
+th:first-child{border-radius:9px 0 0 9px}
+th:last-child{border-radius:0 9px 9px 0}
+td{padding:12px 9px}
+tr:last-child td{border-bottom:0}
+.del{color:var(--text);border-color:var(--line);border-radius:9px}
+.del:hover{background:var(--bg)}
+.tag.yes,.tag.no{color:var(--text)}
+.fine{background:var(--text);color:var(--card)}
+.wk{background:var(--line);color:var(--text)}
+.fr,.ar{padding:12px 2px}
+.dh{padding-top:16px}
+.empty{padding:26px 10px}
+.msg{font-weight:600}
+.dbs{line-height:1.5}
+#add{margin-top:2px}
+#dlall{margin-top:4px}
+@media(max-width:600px){
+  main{padding:16px 12px calc(28px + env(safe-area-inset-bottom,0px))}
+  h1{font-size:1.42rem;margin-top:6px}
+  .sub{font-size:.86rem;margin-bottom:14px}
+  .card{padding:16px;border-radius:17px;margin-bottom:13px}
+  h2{font-size:1rem;margin-bottom:12px}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .st{padding:12px 5px;border-radius:13px}
+  .st b{font-size:1.45rem}
+  .st span{font-size:.68rem}
+  .inline{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+  .inline input{width:100%;min-width:0}
+  #now{grid-column:1/-1;width:100%}
+  .seg{gap:8px}
+  .seg button{padding:10px 8px}
+  .bar{align-items:stretch;gap:9px}
+  .bar .grow{width:100%;min-width:0}
+  .count{align-self:center}
+  #dl,#clear{flex:1 1 100%!important;width:100%}
+  .list{overflow:visible}
+  thead{display:none}
+  table,tbody{display:block;width:100%}
+  tr{
+    display:grid;grid-template-columns:28px minmax(0,1fr) auto;
+    gap:7px 9px;padding:13px 0;border-bottom:1px solid var(--line);
+    align-items:center
+  }
+  td{border:0;padding:0;white-space:normal;min-width:0}
+  td.n{grid-column:1;grid-row:1;color:var(--muted);font-weight:700}
+  td.name{grid-column:2;grid-row:1;font-weight:700;overflow-wrap:anywhere}
+  td.act{grid-column:3;grid-row:1/ span 2}
+  td.c{grid-column:2;grid-row:2;color:var(--muted);font-size:.82rem}
+  td.t{grid-column:3;grid-row:2;color:var(--muted);font-size:.82rem}
+  td.why{grid-column:2/4;grid-row:3;font-size:.84rem;color:var(--muted)}
+  .del{min-height:42px;padding:7px 10px}
+  .res{max-height: min(38vh,280px)}
+  .chips{gap:7px}
+  .chips button{min-height:40px}
+  .top{padding:10px}
+}
+@media(min-width:601px){
+  .card{padding:22px}
+}
+
+
+/* ===== Screenshot uslubidagi zamonaviy davomat paneli ===== */
+:root{--bg:#f6f7f9;--card:#fff;--text:#172033;--muted:#718096;--line:#e3e7ed;--accent:#5146e5;--accent-t:#fff;--danger:#d34b55;--ok:#10b981}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111827;--card:#1f2937;--text:#f3f4f6;--muted:#aab4c4;--line:#374151;--accent:#7770f4;--accent-t:#fff;--danger:#f87171;--ok:#34d399}}
+:root[data-theme="dark"]{--bg:#111827;--card:#1f2937;--text:#f3f4f6;--muted:#aab4c4;--line:#374151;--accent:#7770f4;--accent-t:#fff;--danger:#f87171;--ok:#34d399}
+body{background:var(--bg);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
+main{max-width:760px;padding:18px 16px 42px}
+.app-header{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:14px 16px;margin-bottom:12px;box-shadow:0 3px 12px rgba(20,30,50,.035)}
+.brand-icon{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:11px;background:#5b50e8;color:white;font-size:27px;font-weight:700}
+.brand-copy{min-width:0;flex:1}.app-header h1{font-size:1.08rem;line-height:1.2;margin:0 0 3px;font-weight:800;letter-spacing:-.02em}.app-header .sub{font-size:.76rem;margin:0;color:var(--muted)}
+.live-clock{white-space:nowrap;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.68rem;color:var(--text);background:var(--bg)}.live-clock span{display:inline-block;width:7px;height:7px;border-radius:50%;background:#10b981;margin-right:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px;margin-bottom:12px;box-shadow:0 3px 12px rgba(20,30,50,.035)}
+.dashboard-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.dashboard-stats .st{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 12px;text-align:left;min-height:72px;display:flex;flex-direction:column-reverse;justify-content:center;gap:2px}
+.dashboard-stats .st b{font-size:1.25rem;line-height:1.25;letter-spacing:0}.dashboard-stats .st span{font-size:.7rem;color:var(--muted)}
+.stats-extra{padding:12px 15px}.stats-extra h2{font-size:.82rem;margin:0 0 8px;color:var(--muted)}.stats-extra .top{background:var(--bg);border:0;padding:8px 10px}
+.entry-card{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px 9px;align-items:end}.entry-card h2{grid-column:1/-1;font-size:.92rem;margin:0 0 2px}.field{min-width:0}.field label{font-size:.66rem;text-transform:uppercase;letter-spacing:.01em;margin-bottom:5px;color:var(--muted)}
+.field input,.field select{min-height:42px;height:42px;padding:9px 11px;border-radius:10px;font-size:.84rem;background:var(--bg);width:100%}
+.field-class{grid-column:2;grid-row:2}.field-name{grid-column:1;grid-row:2}.field-date{grid-column:1;grid-row:3}.field-time{grid-column:3;grid-row:2}.time-wrap{display:flex;gap:6px}.time-wrap input{min-width:0;flex:1}.time-wrap #now{min-height:42px;padding:6px 9px;font-size:.72rem}
+.field-reason{grid-column:2;grid-row:3}.field-add{grid-column:3;grid-row:3}.field-results,.field-picked{grid-column:1/-1}
+.field-reason .seg{display:flex;gap:6px;margin:0}.field-reason .seg button{flex:1;min-height:38px;padding:7px;font-size:.78rem}.field-reason #reasonText,.field-reason .chips{margin-top:7px}
+.field-add .primary{width:100%;min-height:42px;padding:8px 10px;font-size:.82rem;border-radius:10px}
+input,select{border-color:var(--line)}input:focus,select:focus{border-color:#8b86f5;box-shadow:0 0 0 3px rgba(91,80,232,.11)}
+.primary{background:#5146e5;border-color:#5146e5;color:#fff}.primary:hover{background:#4338ca}.ghost{background:var(--card);border:1px solid var(--line);color:var(--text)}
+.bar{align-items:center}.bar .grow{min-width:180px}.count{color:var(--muted);font-size:.8rem}
+.list{border:1px solid var(--line);border-radius:11px;overflow:auto}table{border-collapse:collapse}th{background:#f8f9fb;color:#64748b;font-size:.65rem;text-transform:uppercase;padding:11px 9px}td{padding:11px 9px;font-size:.75rem;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}.del{border:0;color:#9aa3b2;font-size:1rem;padding:5px 9px}.wk{background:#f1f3f7;color:#64748b}.fine{background:#fff4e5;color:#b7791f}
+#dl{background:#10b981;border-color:#10b981}#clear{color:#d34b55;border-color:#f1cbd0}
+@media(max-width:600px){main{padding:10px 10px calc(26px + env(safe-area-inset-bottom,0px))}.app-header{padding:12px;gap:9px}.brand-icon{width:38px;height:38px;flex-basis:38px}.app-header h1{font-size:.95rem}.app-header .sub{font-size:.68rem}.live-clock{font-size:.58rem;padding:7px 6px}.dashboard-stats{gap:7px}.dashboard-stats .st{padding:10px 8px;min-height:66px}.dashboard-stats .st b{font-size:1.1rem}.dashboard-stats .st span{font-size:.62rem}.entry-card{grid-template-columns:1fr 1fr;gap:10px 8px;padding:14px}.entry-card h2{font-size:.88rem}.field-name{grid-column:1/-1;grid-row:2}.field-class{grid-column:1;grid-row:3}.field-time{grid-column:2;grid-row:3}.field-date{grid-column:1;grid-row:4}.field-reason{grid-column:2;grid-row:4}.field-add{grid-column:1/-1;grid-row:5}.field-results,.field-picked{grid-column:1/-1}.time-wrap #now{display:none}.field-reason .seg{flex-direction:column;gap:5px}.field-reason .seg button{min-height:34px}.card{padding:13px;border-radius:13px}.bar{gap:8px}.bar .grow{min-width:100%;width:100%}#dl,#clear{flex:1 1 100%!important;width:100%}.list{overflow:visible}tr{grid-template-columns:24px minmax(0,1fr) auto;padding:12px 2px}td.name{grid-column:2;grid-row:1}td.act{grid-column:3;grid-row:1/ span 2}td.c{grid-column:2;grid-row:2}td.t{grid-column:3;grid-row:2}td.why{grid-column:2/4;grid-row:3}th{font-size:.6rem}}
+
+
+
+/* ===== Oq fon va telefon ekranlari uchun yakuniy moslashuv ===== */
+:root{
+  color-scheme:light !important;
+  --bg:#ffffff !important;
+  --card:#ffffff !important;
+  --text:#172033 !important;
+  --muted:#718096 !important;
+  --line:#e3e7ed !important;
+  --accent:#5146e5 !important;
+  --accent-t:#ffffff !important;
+  --danger:#d34b55 !important;
+  --ok:#10b981 !important;
+}
+html,body{background:#ffffff !important;color:#172033 !important;min-height:100%;}
+body{overflow-x:hidden;-webkit-text-size-adjust:100%;}
+main{width:100%;max-width:760px;margin-inline:auto;}
+.card,.app-header,.dashboard-stats .st{background:#fff !important;}
+input,select,.live-clock,.top,.st{background:#fff !important;color:#172033 !important;}
+th{background:#f8f9fb !important;}
+@media(max-width:700px){
+  main{padding:12px 10px calc(24px + env(safe-area-inset-bottom,0px)) !important;}
+  .app-header{display:flex;flex-wrap:wrap;gap:9px;padding:12px !important;border-radius:14px;}
+  .brand-copy{flex:1 1 calc(100% - 55px);min-width:0;}
+  .app-header h1{font-size:1rem !important;overflow-wrap:anywhere;}
+  .app-header .sub{font-size:.72rem !important;}
+  .live-clock{margin-left:47px;max-width:calc(100% - 47px);white-space:normal;font-size:.68rem !important;}
+  .dashboard-stats{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:6px !important;}
+  .dashboard-stats .st{min-width:0;padding:10px 6px !important;min-height:68px;overflow-wrap:anywhere;}
+  .dashboard-stats .st span{font-size:.64rem !important;line-height:1.25;}
+  .dashboard-stats .st b{font-size:1.08rem !important;}
+  .card{padding:14px !important;border-radius:15px !important;margin-bottom:11px !important;}
+  .entry-card{grid-template-columns:minmax(0,1fr) !important;gap:10px !important;}
+  .entry-card h2,.field-name,.field-class,.field-time,.field-date,.field-reason,.field-add,.field-results,.field-picked{
+    grid-column:1/-1 !important;grid-row:auto !important;min-width:0;
+  }
+  .field input,.field select{width:100%;min-width:0;min-height:46px;height:46px;font-size:16px !important;}
+  .field-reason .seg{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));}
+  .field-reason .seg button{min-height:42px !important;font-size:.8rem !important;}
+  .field-add .primary{min-height:48px !important;font-size:.95rem !important;}
+  .bar{display:flex;flex-direction:column;align-items:stretch !important;gap:8px !important;}
+  .bar .grow{width:100%;min-width:0 !important;}
+  .bar input,.bar select,.bar button{width:100%;min-width:0;min-height:44px;font-size:16px !important;}
+  #dl,#clear{width:100% !important;flex:1 1 auto !important;}
+  .list{overflow:visible !important;}
+  thead{display:none !important;}
+  table,tbody{display:block;width:100%;}
+  tr{display:grid !important;grid-template-columns:25px minmax(0,1fr) auto !important;gap:6px 8px;padding:12px 2px !important;border-bottom:1px solid var(--line);align-items:center;}
+  td{min-width:0;padding:0 !important;border:0 !important;white-space:normal !important;overflow-wrap:anywhere;font-size:.78rem !important;}
+  td.n{grid-column:1;grid-row:1;color:var(--muted);font-weight:700;}
+  td.name{grid-column:2;grid-row:1;font-weight:700;}
+  td.act{grid-column:3;grid-row:1/span 2;}
+  td.c{grid-column:2;grid-row:2;color:var(--muted);font-size:.75rem !important;}
+  td.t{grid-column:3;grid-row:2;color:var(--muted);font-size:.75rem !important;}
+  td.why{grid-column:2/4;grid-row:3;color:var(--muted);font-size:.75rem !important;}
+  .del{min-height:42px !important;padding:7px 10px !important;}
+  button{touch-action:manipulation;}
+}
+@media(max-width:380px){
+  main{padding-inline:8px !important;}
+  .dashboard-stats{gap:5px !important;}
+  .dashboard-stats .st{padding:9px 4px !important;}
+  .dashboard-stats .st span{font-size:.59rem !important;}
+  .dashboard-stats .st b{font-size:1rem !important;}
+  .brand-icon{width:36px !important;height:36px !important;flex-basis:36px !important;}
+}
+
+</style>
+</head>
+<body>
+<main>
+  <header class="app-header">
+    <div class="brand-icon" aria-hidden="true">◷</div>
+    <div class="brand-copy"><h1>Maktab Davomat Nazorati</h1>
+      <p class="sub">Kechikkan o‘quvchilarni qayd etish tizimi</p></div>
+    <div class="live-clock"><span></span><b id="liveClock">Yuklanmoqda...</b></div>
+  </header>
+  <div class="card" id="wkbanner" hidden>
+    <div id="wktext"></div>
+    <button class="primary" id="wkbtn" style="margin-top:10px">O’tgan haftani yuklab olish (Excel)</button>
+    <div class="msg err" id="wkmsg"></div>
+  </div>
+
+  <div class="stats dashboard-stats">
+      <div class="st"><b id="stToday">0</b><span>bugun kech qolgan</span></div>
+      <div class="st"><b id="stYes">0</b><span>sababli</span></div>
+      <div class="st"><b id="stNo">0</b><span>sababsiz</span></div>
+  </div>
+  <div class="card stats-extra"><h2>Bugungi statistika</h2><div class="top"><div id="topCls"></div><div id="rank"></div></div></div>
+
+  <div class="card entry-card">
+    <h2>Yangi o‘quvchini ro‘yxatga olish</h2>
+    <div class="field field-class"><label for="cls">Sinf *</label>
+    <select id="cls"><option value="">— Sinf —</option></select></div>
+    <div class="field field-name"><label for="name">O‘quvchi F.I.SH. *</label>
+    <input id="name" placeholder="Masalan: Karimov Jasur" autocomplete="off"></div>
+    <div class="res field-results" id="res" hidden></div>
+    <div class="picked field-picked" id="picked" hidden></div>
+    <div class="field field-date"><label for="fdate">Sana *</label><input type="date" id="fdate"></div>
+    <div class="field field-time"><label for="time">Kelgan vaqti *</label><div class="time-wrap"><input type="time" id="time"><button class="ghost" id="now" type="button">Hozir</button></div></div>
+    <div class="field field-reason"><label>Kechikish sababi</label>
+    <div class="seg"><button type="button" class="ghost" id="yes">Sababli</button><button type="button" class="ghost" id="no">Sababsiz</button></div>
+    <input id="reasonText" placeholder="Sabab (ixtiyoriy) yoki pastdagi misoldan tanlang" autocomplete="off" hidden>
+    <div class="chips" id="chips" hidden></div></div>
+    <div class="field field-add"><label>&nbsp;</label><button class="primary" id="add">+ Qo‘shish</button></div>
+    <div class="msg" id="msg"></div>
+    <div class="dbs" id="dbstate"></div>
+  </div>
+
+  <div class="card">
+    <div class="bar">
+      <div class="grow"><label for="date">Ro’yxat sanasi</label><input type="date" id="date"></div>
+      <div class="count" id="count"></div>
+    </div>
+    <div class="list">
+      <table>
+        <thead><tr><th>№</th><th>F.I.SH</th><th>Sinf</th><th>Sana va vaqt</th><th>Sabab</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty">Bu kuni hali hech kim belgilanmagan.</div>
+    </div>
+    <div class="bar" style="margin-top:14px">
+      <button class="primary" id="dl" style="flex:2">Ro’yxatni yuklab olish (Excel)</button>
+      <button class="ghost" id="clear" style="flex:1">Kunni tozalash</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Jarimaga tortilganlar</h2>
+    <p class="sub" style="margin-bottom:8px">Bir haftada (dushanba–yakshanba) 2 va undan ko’p marta sababsiz kech qolganlar. Sababli kech qolganlar jarimaga hisoblanmaydi. Quyidagi “Hafta” tanloviga qarab ko’rsatiladi.</p>
+    <div id="fines"></div>
+  </div>
+
+  <div class="card">
+    <h2>Barcha sanalardagi kech qolganlar</h2>
+    <div class="bar"><div class="grow"><label for="wsel">Hafta</label><select id="wsel"></select></div><div class="count" id="allcount"></div></div>
+    <button class="ghost" id="dlall" style="width:100%;margin-bottom:8px">Tanlangan haftani yuklab olish (Excel)</button>
+    <div id="alllist"></div>
+    <div class="msg" id="msg2"></div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+const today = () => { const d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
+const nowStr = () => { const n = new Date(); return pad(n.getHours()) + ":" + pad(n.getMinutes()); };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmtD = d => d.split("-").reverse().join(".");
+const keyOf = r => (r.name || "").trim().toLowerCase().replace(/\s+/g, " ") + "|" + (r.cls || "").trim().toLowerCase();
+const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+function makeXlsx(rows, sheet) {
+  if (typeof XLSX === "undefined") throw new Error("xlsx");
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws["!cols"] = [{ wch: 5 }, { wch: 30 }, { wch: 8 }, { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 28 }, { wch: 20 }, { wch: 10 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sheet);
+  return XLSX.write(wb, { type: "array", bookType: "xlsx" });
+}
+
+const ROSTER = {"5-A":["ABDIXALILOV MUHAMMADZOHID ABDUJALIL O‘G‘LI","ABDULXAMIDOVA DURDONA AKMAL QIZI","ABDUSATTOROVA DILDORA ISMOILJON QIZI","AXMADJONOV ISLOMJON INOMJON O‘G‘LI","AXMADJONOVA MUSHTARIYBONU ADXAMJON QIZI","BAXODIROV ASADBEK XASANBOY O‘G‘LI","DO‘SBAYEV OG‘ABEK ORTIQBOY O‘G‘LI","DODOVA MUMTOZBEGIM MUXTORJON QIZI","G‘ANIJONOV FAZLIDDIN O‘KTAMJON O‘G‘LI","G‘AYBULLAYEV DONIYORJON ALIYOR O‘G‘LI","IBROXIMOV INOMJON ISOQJON O‘G‘LI","IKROMJANOVA KAMOLA ISRAILJON QIZI","IKROMOV ASILBEK AZIZJON O‘G‘LI","ISROILOV MUHAMMADQODIR RAXMON O‘G‘LI","MAMADJONOVA UMIDA SHERZOD QIZI","MUXAMADMUSOYEV IXTIYOR OTABEK O‘G‘LI","OLIMJANOVA MOHLAROY QAXRAMON QIZI","RAXIMJANOV MIRZOHID MUZAFFAR O‘G‘LI","RAXMATILLAYEV FURQATBEK FARXOD O‘G‘LI","SHAVKATOV NOZIMJON NOSIR O‘G‘LI","TOJIMAMATOV AHMADJON ABDULLAJON O‘G‘LI","UMARALIYEVA AFRUZA DILSHOD QIZI","VALIJONOV MUHAMMADRIZO JASURBEK O‘G‘LI","XABIBULLAYEVA FARANGIZ TOXIRJON QIZI","XABIBULLAYEVA GULZODA ZOKIR QIZI","XASANBAYEV NODIRBEK ULUG‘BEK O‘G‘LI","XOJIDEDAYEV BEHZODBEK BAXTIYOR O‘G‘LI","XOTAMJANOVA MOHINUR DONIYOR QIZI","XUSANBOYEV ABRORBEK ELMUROD O‘G‘LI","ZOKIRJONOV ISLOMJON RAVSHANBEK O‘G‘LI","ZOKIRJONOVA ZULFIYABONU ABDUMALIK QIZI"],"5-B":["ABDUJABBAROV MIRZIYO ABDULAZIZ O‘G‘LI","ABDURAIMOV HOJIAKBAR HUSANBOY O‘G‘LI","ABDUSALOMOVA DURDONA RUSTAM QIZI","ABDUVAXOBOV SHOHRUZBEK ULUG‘BEK O‘G‘LI","ABDUVOXIDOVA SHUKRONA ABDUBANNO QIZI","ALISHEROV AHADJON AZIZBEK O‘G‘LI","BAXROMJONOVA MARJONA MIRZOXID QIZI","G‘AFURJONOVA DILFUZA DILSHOD QIZI","IBROXIMJONOVA SARVINOZ SANJARBEK QIZI","ILXOMJANOV HUMOYUN SANJARBEK O‘G‘LI","INAMOVA SAMIRA FARXOD QIZI","ISMONJONOV IXTIYORBEK BAXTIYOR O‘G‘LI","MAXMUDJONOVA SARVINOZ MA‘MURJON QIZI","RAXIMJONOVA FOTIMAXON ADXAMJON QIZI","RAXIMJONOVA ZUHRAXON ADXAMJON QIZI","RUSTAMOVA GULYORA O‘KTAM QIZI","SADRIDDINOVA DURDONA SARDORBEK QIZI","SHUXRATOV SHOHRUHBEK SHOKIR O‘G‘LI","SOBITXONOVA MOHLAROYIM ABRORJON QIZI","TOXIRJONOVA MUSLIMA ALISHER QIZI","TURABOYEV SARDOR BOBUR O‘G‘LI","VOHIDJONOV SAIDBEK DILSHOD O‘G‘LI","XAMIDBOYEV UMIDBEK MA‘RUFJONOVICH","XAMITBAYEVA MUBINAXON UMIDJON QIZI","XAMITBOYEV MUHAMMADZIYO ILXOMJON O‘G‘LI","XOJIAKBAROVA MUBINA MAXSUD QIZI"],"5-D":["ABDIBANNAYEV YUNUSXON ABDURASHID O‘G‘LI","ABDIXAMIDOV MURODJON DILSHOD O‘G‘LI","ABDUNABIYEV OYBEK AVAZBEK O‘G‘LI","ABDUVOXIDOV ASADBEK FAXRIDDIN O‘G‘LI","ABITXONOV SHOHRUHBEK SARDOR O‘G‘LI","AXATJONOVA HAYRINISO ODILJON QIZI","AXMADJANOV BARKAMOL AKMALJON O‘G‘LI","AXMADJONOV ABDULAZIZ G‘ULOMJON O‘G‘LI","AXMADJONOVA O‘G‘ILOY MURODILLA QIZI","AXMADJONOVA SHIRIN A‘ZAMJON QIZI","EGAMBERDIYEV MUHAMMADZIYO MUSLIMJON O‘G‘LI","G‘ANISHEROV SHERMUHAMMAD AZAMAT O‘G‘LI","IKRAMOVA MARJONA ISMOIL QIZI","IKROMJONOVA SHODIYA NURMUXAMMAD QIZI","IKROMOV ISLOMJON ISROILJON O‘G‘LI","ISMONJANOV FIRDAVS FARHOD O‘G‘LI","IZZATILLAYEVA GULASAL MUZAFFAR QIZI","JO‘RAYEV ISLOMBEK IBROHIMJON O‘G‘LI","MUXAMMADISMOILOV MUHAMMADALI O‘TKIRJON O‘G‘LI","NOSIRJONOV DOVUDXON IKROM O‘G‘LI","NOSIRJONOV YOQUBJON SODIQJON O‘G‘LI","OLIMJONOVA JASMINA JASURBEK QIZI","ORTIQBAYEVA GULSHODA ALIMARDON QIZI","RAXIMJONOVA MUHTARAMXON XASANBOY QIZI","TURSUNBOYEV AKBARJON AKMAL O‘G‘LI","UMARALIYEVA MUSHTARIY ABDULATIF QIZI","USMONALIYEVA GULZODAXON ISMOIL QIZI","VOXIDJANOVA MUSLIMABONU BEGZOD QIZI","XASANBOYEV ASRORBEK ADHAMJON O‘G‘LI","XASANBOYEVA NOZIMAXON DILMUROD QIZI","ZOKIRJONOVA SHUKRONA QOBUL QIZI"],"5-E":["ABDUG‘ANIYEV MUHAMMADYUSUF ABDURASUL O‘G‘LI","ABDUMUMINOV ULUG‘BEK ABROR O‘G‘LI","ABDUMUTALOV SARDOR SHERALI O‘G‘LI","ABDUXALILOVA ZULFIRA AKRAMJON QIZI","AKBARXUJAYEVA MUSLIMAXON ABROR QIZI","AVAZXONOVA OQILA ISLOM QIZI","BAXTIYOROVA MUSHARRAF ISKANDAR QIZI","BOYMURADOV ABDULLOH ABDUGAFFOR O‘G‘LI","ISMONJANOV SARDORBEK RUSTAMJON O‘G‘LI","JURABOYEV BAXTIYOR ABDULXOMID O‘G‘LI","KOMILJONOVA SHAHRIZODA ODIL QIZI","MAMADJONOV DILMUROD DILSHOD O‘G‘LI","MAMADJONOVA MUHLISA QOBULJON QIZI","MANSUROVA GULASAL OYBEK QIZI","MAXMUDJONOVA SARVINOZ OLIMJON QIZI","O‘RAZMATOVA AZIZAXON AZAMAT QIZI","O‘ROLOVA MUMTOZBEGIM AZAMATOVNA","RAVSHANBEKOVA SHIRINOY DOSTON QIZI","RAXMATILLAYEVA MUSHTARIYBONU ABDULXAMID QIZI","RAXMATILLAYEVA SHAHODAT SHAVKATJON QIZI","RAXMONBERDIYEV ABUBAKR ABRORJON O‘G‘LI","RUSTAMJONOV DIYORBEK BAXROMJON O‘G‘LI","TURSUNBOYEV MUHAMMADZIKIRYO BAXROMJON O‘G‘LI","TURSUNBOYEV RASULBEK RAVSHANBEK O‘G‘LI","TURSUNBOYEVA MOHINUR BEKZOD QIZI","VALIJONOVA MEHRIBONU OTABEK QIZI","XAMITBOYEV FAYOZBEK USMIRJON O‘G‘LI","YOQUBJONOVA MUSHTARIY TOXIRJON QIZI"],"5-F":["ABDULXAMIDOV AZAMAT MIRZOXID O‘G‘LI","ABDUNABIYEV AZIZBEK MIRZOXID O‘G‘LI","ATAXANOVA YASMINA ILXOMJON QIZI","BAXROMJANOVA FARANGIZ SALIMJON QIZI","DILSHODOV ASADBEK DONIYOR O‘G‘LI","ERGASHBOYEV IBROHIM ASHURALIYEVICH","ERKINBOYEV AKBARJON ILXOM O‘G‘LI","IKROMJONOV ADHAMJON AKBAR O‘G‘LI","JURAXONOVA GULASALXON ILXOMJON QIZI","KIMSANJONOV FIRDAVS FARRUX O‘G‘LI","MAMADALIYEV HUMOYUNBEK AKMALJON O‘G‘LI","MAXMUDJONOVA KUMUSHOY MANSUR QIZI","ODILJONOV JAHONGIR ANVAR O‘G‘LI","OLIMJANOV AZIZBEK ANORBEK O‘G‘LI","OLIMJANOVA MUAZZAMXON LUXMONJON QIZI","OLIMJONOV SARDORBEK JAFARBEK O‘G‘LI","ORIBJONOV MUHAMMADALI MUROD O‘G‘LI","RAVSHANJONOV NURMUHAMMAD JAVLON O‘G‘LI","RO‘ZIMATOVA GULOYIM XASANBOY QIZI","SHOKIROV AZAMAT BEKZODJONOVICH","SOBIROVA SARVINOZ XUSNIDIN QIZI","TAVAKKALOV MURODJON QODIRJON O‘G‘LI","TURG‘UNBOYEVA ZIYODAXON OYBEK QIZI","TURG‘UNPULATOV AKBARALI MA‘RUFJON O‘G‘LI","UBAYDULLAYEVA HUSHNOZABEGIM JAXONGIR QIZI","ULMASBOYEV AKRAMJON BAXROMJON O‘G‘LI","XAMITXONOVA HADICHABEGIM ISMOILJON QIZI"],"6-A":["ABDIRAXIMOVA FOTIMAXON ABDURASHID QIZI","ABDIRAXIMOVA ZUHRAXON ABDURASHID QIZI","ABDUG‘ANIYEVA MUBINAXON ABDUJABBOR QIZI","ABDUG‘OPPOROVA TURSUNOY ABDUMAJID QIZI","ABDUMAJITOV AHRORBEK ANVARJON O‘G‘LI","ABDUMAJITOV JAHONGIR ABDUMUTAL O‘G‘LI","ABDUPATTOYEVA MEHRINISO MA‘MURJON QIZI","ABDUVOXIDOVA KUMUSH XUSANBOY QIZI","AHMADJONOV AVAZBEK A‘ZAMJON O‘G‘LI","AKRAMJONOVA ZEBO G‘ULOM QIZI","AXMADJONOV NURIDDINBOY AKMALJON O‘G‘LI","AXMADOVA FARANGIZOY ANVARJON QIZI","BEKMIRZAYEV MAQSADJON ELMURODOVICH","DAVLATALIYEV IBROHIM MASHRABBOY O‘G‘LI","G‘ANIJONOV YIGITALI RUSTAM O‘G‘LI","IBROXIMOVA MUBINA ISMOILJON QIZI","JO‘RABOYEVA ZARINA UZEN QIZI","JO‘RAMIRZAYEV OTABEK G‘ULOMJONOVICH","LUTFULLAYEVA AZIZAXON TOXIRJON QIZI","LUTFULLAYEVA DURDONA BOTIRJON QIZI","ODILJONOV ABRORBEK QOBULJON O‘G‘LI","ODILJONOVA DILSHODA SOXIBJON QIZI","OLIMJONOV SOBITJON ORIFJON O‘G‘LI","RAXMATILLAYEVA MARJONA SHERZOD QIZI","RAZIKOV BAHODIR BAXROMOVICH","RAZIKOV BAHODIR BAXROMOVICH","RUSTAMJONOV JAMSHIDBEK OTABEK O‘G‘LI","TAXIRJANOV ULUG‘BEK UMIDJON O‘G‘LI","TOJIMIRZAYEV HUSNIDDIN XUSANBOY O‘G‘LI","YO‘LDOSHBOYEV AZIZBEK RO‘ZIMAMAT O‘G‘LI","YULDASHEVA DILDORA QAHRAMON QIZI","ZOKIRJANOV ABDUMAJID ABDUXALIL O‘G‘LI"],"6-B":["ABDILXAMIDOVA SHOHIDAXON MUZAFFAR QIZI","ABDULQODIROV FIRDAVS QOBILJON O‘G‘LI","ABDUMALIKOVA DILNOZA ALISHER QIZI","ABDURASULOVA CHAROSXON ABDULLAJON QIZI","ABDURAXIMOV AQLBEK ABROR O‘G‘LI","ABDUXALILOVA ZEBINISO ALIJON QIZI","ADASHALIYEV JAHONGIR UMIDJON O‘G‘LI","ADASHALIYEV ZOHIDBEK MUXAMMADZOKIR O‘G‘LI","ALIMJANOV BEHRUZBEK AZIMJON O‘GLI","BAXTIYOROV UMIDJON DONIYORBEK O‘G‘LI","BOTIRJONOVA DURDONA ANVAR QIZI","BOZORBOYEVA MUBINAXON BAXTIYOR QIZI","G‘OFUROVA ZULFIYA AZIZBEK QIZI","IKROMJONOVA FARANGIZ FAXRIDDIN QIZI","KOMILJONOVA GULSANAM OBID QIZI","MAMADURAYIMOVA MOHLAROYIM KOMILJONOVNA","MAXAMMADINOV JAHONGIR MURODJON O‘G‘LI","MAXAMMADJONOV QOBILJON ABDULQODIR O‘G‘LI","MAXMADJONOV XUDOYORXON AKBAR O‘G‘LI","MAXMUDJONOV JAVHARALI RUSTAMBEK O‘G‘LI","NE‘MATJONOVA MUSLIMA QOSIMJON QIZI","NISHONBOYEV JASURBEK ADHAMJON O‘G‘LI","NOMONJONOVA SHABNAM A‘ZAMJON QIZI","NOSIRJONOVA MADINABONU NOZIMBEK QIZI","QODIRJANOVA MUSLIMA ANVARJON QIZI","RAVSHANBEKOVA ZIYODA OTABEK QIZI","TOXIRJONOV HUSANBOY OYBEK O‘G‘LI","TOXIRJONOVA FOTIMAXON OYBEK QIZI","XABIBULLAYEVA MUBINABONU BAXTIYOR QIZI","XOLIQOVA SEVINCH ABDURASHID QIZI","YUSUPOV ZIYODULLOH XABIBULLO O‘G‘LI","YUSUPOVA MARJONA XUSANBOY QIZI"],"6-D":["ABDIG‘APPOROVA GULHIDA FARRUX QIZI","ABDIXALILOV ASADBEK BAXTIYOR O‘G‘LI","ABDUQAXXOROV ALISHER ZOKIRJON O‘G‘LI","ABDUVALIYEV AZIZBEK DILMUROD O‘G‘LI","ABDUVAXIDOVA NODIRABEGIM ABDUNOZIR QIZI","ABDUVOHIDJONOV ALI ABDUXALIL O‘G‘LI","ABDUXALILOVA GO‘ZALXON XAMIDDILLO QIZI","AHMADJONOVA SHAHNOZA UMIDJON QIZI","ALISHEROV MUHAMMADRIZO RAVSHAN O‘G‘LI","ALISHEROV SHAMSHODBEK SHUXRAT O‘G‘LI","ANVARJONOV XURSHIDBEK ABROR O‘G‘LI","AXMADJONOVA AZIZABONU AKMALJON QIZI","BAXROMJONOVA ASALXON ILXOM QIZI","BOYXONBOYEVA OZODAXON JAXONGIR QIZI","DILSHODOV DILYORBEK DILMUROD O‘G‘LI","G‘AYBULLAYEV AZIZBEK A‘ZAMJON O‘G‘LI","IKROMJONOVA MAHLIYO AKRAMJON QIZI","ISMONJONOVA GULIRA‘NO ILXOMJON QIZI","MURODILLAYEV JASURBEK ALIJON O‘G‘LI","NABIJONOVA SARVINOZ G‘ULOM QIZI","OLIMJANOVA DILSO‘Z ANVAR QIZI","OLIMJONOVA MADINABONU UMID QIZI","ORIBJANOVA MUSLIMA OLIMJON QIZI","ORIFOVA MEHRIBONU RAVSHANBEK QIZI","RAXIMOV SAIDAKBAR RAFIQ O‘G‘LI","SHOKIRJONOV RAHMATILLO SHAVKATJON O‘G‘LI","SOBIRJONOVA SARVINOZ SODIQJON QIZI","SOLIJANOV ISLOMJON G‘ULOM O‘G‘LI","TURG‘UNBOYEV MUHAMMADIBROHIM ALISHER O‘G‘LI","UROYIMJANOVA ISMINOZ ILYOSOVNA","XOLMUXAMMADOV ABRORBEK SHERZOD O‘G‘LI","ZAKIRJONOVA SHODIYA ELYOR QIZI"],"6-E":["ABDIBANNAYEVA SHAHINABONU ABDUNOSIR QIZI","ABDILAJONOVA SHODIYA AKRAMJON QIZI","ABDIMAMATOVA MARJONAXON BAXTIYOR QIZI","ABDURASHIDOVA GULYUZ AKMALOVNA","ABDURASULOV ASRORBEK AKMALJON O‘G‘LI","ABDUSATTAROVA GULASAL FARXOD QIZI","AYDAROVA OYSHAXON XXX","BAXROMOVA MUBINABONU BAXROM QIZI","BEKZODOVA JASMINA BEKZOD QIZI","BOQIJANOVA CHAROSXON BAXROMJON QIZI","BOTIRJONOV ABDUSAMAD FAXRIDDIN O‘G‘LI","ERGASHEVA MARXABOXON RAXIM QIZI","G‘ULOMJANOVA SHODIYABONU MUQINJON QIZI","ISOQJONOV MIRZOHID ALISHER O‘G‘LI","ISOQJONOVA MUNZIRA IBROHIM QIZI","ISOQJONOVA SHODIYA DILSHOD QIZI","KARIMOV OYATILLO AXMADJON O‘G‘LI","NAJMIDDINOV FARRUX SADRIDDIN O‘G‘LI","NURIDDINOV MUHAMMADYUSUF RUSTAM O‘G‘LI","ODILJONOV HUMOYUNBEK XAYTBOY O‘G‘LI","OLIMJANOV BILOL ORIFJON O‘G‘LI","ORTIQBOYEV AZIZBEK NODIRBEK O‘G‘LI","QODIRJONOVA NOZIMA MUROD QIZI","TESHABAYEV YUSUPALI SULTANBAYEVICH","TURABOYEV HURSHIDBEK MA‘MUROVICH","XABIBULLAYEV JASURBEK MIRZOXID O‘G‘LI","XAKIMOV ZOIRSHOH SHERZOD O‘G‘LI","XOLMIRZAYEVA MARJONA MUZAFFAR QIZI","XUSANBOYEVA MOHIDIL DILMUROD QIZI"],"6-F":["ABDUMALIKOVA MADINA ABDURAXIM QIZI","ABDUQAXXOROVA MUMTOZABEGIM A‘ZAMAT QIZI","ABDURASULOV IBROHIMJON ABDULBOQI O‘G‘LI","ABDUSATTOROVA MAFTUNA OLIMJON QIZI","ABDUVALIYEVA MAXSUMAXON AXMADJON QIZI","AHMADJONOVA ZINNATXON AVAZBEK QIZI","AKBAROVA GAVHAROY ABDULAZIZ QIZI","AKRAMJONOVA MADINABONU RUSTAMJON QIZI","ALISHEROVA SHAHRIBONU XUSNIDDIN QIZI","AXMADJANOVA DURDONA ADXAMJON QIZI","AXMATJONOV DIYORBEK DONIYOR O‘G‘LI","IKROMJANOVA DILNOZA BAXROMJON QIZI","ILXOMJONOV JAMSHID ALISHER O‘G‘LI","ISMATULLAYEV MUSTAFO IZZATULLA O‘G‘LI","ISOQJANOVA MARJONA BAXTIYOR QIZI","KOMILJANOVA FERUZA SHAVKAT QIZI","KOMILJANOVA GULISHODA DILMUROD QIZI","KOMILJONOV HUMOYUNMIRZO SHOKIR O‘G‘LI","KOMILJONOV INOMJON ISLOMJON O‘G‘LI","MAMADJONOVA MASTONA SHAVKATJON QIZI","MURODILLAYEV SHODIYORBEK SHERZOD O‘G‘LI","ODILJANOVA SHODIYAXON UTKIR QIZI","QO‘CHQORBOYEV MIRZIYO ABDUG‘OFIR O‘G‘LI","QO‘CHQOROV SANJARBEK DONIYOR O‘G‘LI","RAXMATILLAYEVA AZIZA AXMADJON QIZI","RO‘ZIMAMATOV ASILBEK ORIFJON O‘G‘LI","RUSTAMJANOVA MO‘TABARXON ABDURASHID QIZI","SAIDIKRAMOVA MUXARRAM RAXMATILLA QIZI","SOBIRJANOV XURSHIDBEK ZOKIRJON O‘G‘LI"],"7-A":["ABDINABIYEVA ASALXON MUZAFFAR QIZI","ABDIQODIROVA NAFISA ILXOMJON QIZI","ABDUG‘ANIYEVA BEGOYIM UMIDJON QIZI","ABDUG‘APPOROVA FARANGIZBONU BOTIR QIZI","ABDULXAMIDOVA SHAXNOZABONU ANVARJON QIZI","AXMADJANOVA GULSORA BUNYODJON QIZI","AZIMBOYEV AVAZBEK ABROR O‘G‘LI","BOZORBAYEVA DILDORA BOTIRJON QIZI","G‘ULOMJANOVA GULASAL ALISHER QIZI","G‘ULOMJONOVA NAFISAXON TOLIBJON QIZI","INOMJONOV FIRDAVS JAMSHID O‘G‘LI","IZZATILLAYEV ILG‘ORBEK ILYOS O‘G‘LI","JALILOV AXMADILLO ABDUXALIL O‘G‘LI","KAMOLIDDINOVA AZIZAXON SIROJIDDIN QIZI","KAMOLXONOV XURSHIDBEK OTABEKOVICH","KOMILJANOV SHUKRULLO SHERZOD O‘G‘LI","MAHAMMADJONOV MURODJON G‘ULOM O‘G‘LI","MAVLANOVA SARVINOZ AXADJON QIZI","MAXMUDJONOV MUHAMMAD DILSHOD O‘G‘LI","MIRZAXMEDOV SHERDORBEK MUZAFFAR O‘G‘LI","MURODILLAYEV DIYORBEK DILSHODBEK O‘G‘LI","MUXAMADJONOVA GULASAL RUSTAMJON QIZI","OLIMJONOVA NASTARIN JASURBEK QIZI","RO‘ZIBAYEVA DURDONA BUNYOD QIZI","RUSTAMOVA GULASAL UKTAM QIZI","SHERMIRZAYEV SHAHZODBEK SHERZOD O‘G‘LI","TOXIRJONOVA MARJONA ALISHER QIZI","TURG‘UNBOYEVA LOLAXON RAXIMJON QIZI","UMARJONOV SAIDBEK ZAYNIDDIN O‘G‘LI","VALIJONOVA MOHINUR JASURBEK QIZI","VALISHEROV AHRORBEK SARDOR O‘G‘LI","XOJIAKBAROVA MUSLIMA MAXSUD QIZI"],"7-B":["ABDINABIYEVA SARVINOZ JAMOLIDDIN QIZI","ABDULLAJANOVA SHABNAM SHUXRAT QIZI","AKROMJONOVA MUBINA BEKZOD QIZI","ALISHEROV AKOBIR ANVARJON O‘G‘LI","ANVARJONOV HOJIAKBAR AKRAM O‘G‘LI","AVAZBEKOV MAQSUDBEK SHUXRATJON O‘G‘LI","BAXODIROVA SHUKRONA ISROIL QIZI","BAXROMOV HUMOYUN AKMALJON O‘G‘LI","BOTIROVA MOHINUR XASANBOY QIZI","ERGASHBOYEV BEKZODBEK BOTIRJON O‘G‘LI","ERGASHBOYEVA E‘ZOZA VALIJON QIZI","ERKINBOYEVA AZIZAXON ILXOM QIZI","GAPPAROV FYODOR MUSHRIF VOSILOVICH","IMOMALIYEVA ZULAYHO XUDAYBERDI QIZI","ISOQJONOV MUHAMMADALI RUSTAMJON O‘G‘LI","JALILOV MUSTAFO BAXTIYOR O‘G‘LI","KIMSANJONOVA CHAROSXON FARRUX QIZI","MAMADJANOVA DILRABO ELMUROD QIZI","MAMAJONOV BAHODIR RUSTAM O‘G‘LI","MURODILLAYEVA JASMINA ELYORJON QIZI","NEMATJONOV OZODBEK AKMALJON O‘G‘LI","QOSIMBOYEVA BEGOYIM BAHODIR QIZI","SIDIQJONOV AZIZBEK ELYOR O‘G‘LI","SOLIJANOV BEHRUZBEK XAITMIRZA O‘G‘LI","SOLIJONOVA OYGUL AZIMJON QIZI","TURG‘UNBOYEVA XONZODA OCHILBEK QIZI","TURG‘UNPULATOVA DURDONA QODIRJON QIZI","TURSUNBEKOVA SALIMAXON OTABEK QIZI","XAYRULLAYEVA FERUZA XABIBULLO QIZI","XOSHIMBOYEV DIYORBEK XAKIMZODA O‘G‘LI","YODGOROV ABDUMALIK ABDUMUTAL O‘G‘LI","ERGASHEV AXRORBEK AXMADJON O‘G‘LI"],"7-D":["ABDUG‘ANIYEV A‘ZAMJON MUZAFFAR O‘G‘LI","ABDUMALIKOVA BARCHINOY QUDRATJON QIZI","ABDUVOXIDOVA HUSHNOZABEGIM ABDULAZIZ QIZI","ALIJONOVA DILNOZA ALIJON QIZI","ALISHEROV ABDULLOH ODILJON O‘G‘LI","ARTIQBAYEVA ZILOLAXON ELYOR QIZI","ATABAYEVA MARJONA UMIDILLO QIZI","AXMADOV NURBEKJON NE‘MATJON O‘G‘LI","BAXODIROV JASURBEK ABDURASHID O‘G‘LI","BOTIRJONOVA MUBINAXON BAXRIDDIN QIZI","DOLIMJONOVA DIYORA NODIRBEK QIZI","ERGASHBAYEV SANJARBEK OLIMJON O‘G‘LI","IBRAXIMOVA NIGORAXON G‘ULOMJON QIZI","ISKANDAROVA DURDONA MAXAMMADALI QIZI","ISLOMJONOV JAHONGIR UBAYDILLA O‘G‘LI","JURAXONOVA DIYORAXON ULUG‘BEK QIZI","KAZAKJANOV AZIZBEK KOMILJON O‘G‘LI","KOMILJANOV IKROMJON ILHOMJON O‘G‘LI","KOMILJANOVA DURDONA DONIYOR QIZI","KOMILJONOV SHOXJAXON BEKZOD O‘G‘LI","MAXAMATJONOVA MADINABONU RUSTAMJON QIZI","MAXAMMADJANOVA MADINA ABDUMALIK QIZI","MURODILLAYEV BEHRUZBEK ANVARJON O‘G‘LI","ODILJONOV AFZALBEK O‘KTAM O‘G‘LI","TURSUNBOYEVA DURDONAXON AKMALJON QIZI","XAKIMOV SHAHBOZ SHERZOD O‘G‘LI","AXMADJONOVA SEVINCH UMARJON QIZI","JUMANALIYEV AZIZBEK YULDUZBEK O‘G‘LI","IBROXIMOV JOBIRBEK MA‘RUF O‘G‘LI","FOZILJONOV JASURBEK RUSTAM O‘G‘LI","ERKINOV RAXMATILLO BAXTIYOR O‘G‘LI"],"8-A":["ABDUKARIMOVA NOZIMA MAVLONBOY QIZI","RAXMATILLAYEVA DILAFRO‘Z AXAMADJON QIZI","RUSTAMOVA RUXSORA BATIR QIZI","ABDUBANNOYEV BAXRIDDIN ABDUBAXROM O‘G‘LI","ABDULLAYEV AZIZBEK SHUXRAT O‘G‘LI","ABDULLAJONOVA RAYXONA ABDUXAJON QIZI","ABDURASULOV O‘KTAMJON ABDULAZIZ O‘G‘LI","AVAZBEKOV ASILBEK JASUR O‘G‘LI","AKRAMJONOVA VASILAXON ADXAMJON QIZI","ATAXANOVA BIBISORA ILXOMJON QIZI","G‘OFUROVA JAMILA JAMOLIDDIN QIZI","YOQUBJONOV DAVLATBEK YORQIN O‘G‘LI","JOXONALIYEV ILXOMJON DILMUROD O‘G‘LI","JO‘RABOYEVA SEVARA ABDULXAMID QIZI","IKROMJONOV AKMALJON AKBAR O‘G‘LI","IMINOVA ZUXRA MUZAFFAR QIZI","IMINOVA FOTIMA MUZAFFAR QIZI","MALLABOYEVA MANZURAXON MURODJON QIZI","MAXAMMADOVA MARJONA MIRZAJON QIZI","MAXAMMATJONOV AXLIDDIN FARXODJON O‘G‘LI","NISHONBOYEV AZIZBEK AKRAMJON O‘G‘LI","OLIMJANOVA SHAXLOXON ORIFJON QIZI","OTAXONOVA MUSHTARIY SHOKIRJON QIZI","RAIMJONOVA ZARINA XASANBOY QIZI","RAXMATOVA OYDINA BAHODIR QIZI","TOXIRJONOV ADXAMJON RAXIMJON O‘G‘LI","TURG‘UNOV DOVUDXON RAXIMJON O‘G‘LI","XABIBULLAYEV FIRDAVS TOXIRJON O‘G‘LI","ERGASHEV A‘ZAMJON TO‘XTABOY O‘G‘LI"],"8-B":["LUTFILLAYEVA GULXIDA ABDULXAKIM QIZI","MAMADJONOV SHOHRUHBEK SHAVKATJON O‘G‘LI","TURSUNPULATOV AKRAMJON FARHOD O‘G‘LI","ABDUVALIYEVA MUBINA AKMALJON QIZI","ABDULXAMIDOV JALOLIDDIN ILXOMJON O‘G‘LI","ABDUMAJITOVA DURDONA ABDUMUTAL QIZI","ABDUNABIYEVA JASMINA UMIDJON QIZI","AXMADJONOV ASILBEK A‘ZAMJON O‘G‘LI","AXMADJONOV AFZALBEK AKMALJON O‘G‘LI","AXMADJONOVA MADINABONU DILMUROD QIZI","AXMADJONOVA MOHLAROY MURODILLA QIZI","AXMADOVA FAZILATOY ANVARJON QIZI","AHMADJONOV DAVLATSHER BAXROMJON O‘G‘LI","BAXODIROVA MOXIRA BAXTIYOR QIZI","DOLIMJANOVA GULZODA ABDUNABI QIZI","ZOKIRJONOVA SHABNAM ELYOR QIZI","IKROMJONOV SANJARBEK XAMIDULLO O‘G‘LI","KAMOLXONOVA KAMOLA OTABEKOVNA","LUTFULLAYEV MUHAMMADSODIQ BAXRIDDIN O‘G‘LI","MAXAMADALIYEV AVAZBEK ADXAMJON O‘G‘LI","MIRZAMAXMUDOV JAXONGIR BOTIRJON O‘G‘LI","NABIYEVA MARJONA MUZAFFAR QIZI","ORIBJANOV AZIZBEK OLIMJON O‘G‘LI","RAXIMJONOVA MUSHTARIYBONU AKRAM QIZI","RAXIMJONOVA SHABNAM SARDORBEK QIZI","TURG‘UNBOYEVA RAYXONA OYBEK QIZI","XAMIDBOYEVA MARHABOXON BAXRIDDIN QIZI","XAMIDJONOV AZIZBEK MAXAMMADJON O‘G‘LI","XOLIQOV AKMALJON ABDUXALIL O‘G‘LI"],"8-D":["ABDIRAXIMOV ASADBEK ULUG‘BEK O‘G‘LI","ABDUMALIKOV SAIDBEK SIROJIDDIN O‘G‘LI","BAXRAMOV OZODBEK AVAZBEK O‘G‘LI","ISLOMJONOVA CHAROS ISLOMJON QIZI","MAXMADJONOVA MUMTOZABEGIM HABIBULLO QIZI","ABDUVOXIDOVA SHIRIN ABDUNOZIR QIZI","ABDURAXIMOV QILICHBEK O‘TKIRBEK O‘G‘LI","ABDURASHIDOVA MUSHTARIYBONU ABDURAXMON QIZI","AXMADJONOV SHAMSHODBEK DONIYOR O‘G‘LI","BOTIRJANOVA MADINABONU SHOKIRJON QIZI","DAVRONJONOV JAVOXIR JAVLON O‘G‘LI","DADABAYEVA GULBAXOR DILSHOD QIZI","IKROMJANOVA DILRABO BAXROMJON QIZI","KOMILJANOV AZIZBEK SHAVKAT O‘G‘LI","MAXAMATJONOVA RAYXONA ANVARJON QIZI","MAXAMMADJONOVA MADINA ABDULQODIR QIZI","NABIJONOVA MASHXURAXON ALIJON QIZI","NURIDDINOVA ASALXON RUSTAM QIZI","NURIDDINOVA MAFTUNA BAXTIYOR QIZI","RAXMATILLAYEVA DILNOZA SHAVKATJON QIZI","TURG‘UNOV SHOXJAXON ALISHER O‘G‘LI","TURSUNBOYEVA OYSHABIBI DILMUROD QIZI","USMONJONOVA MARXABO BAXRIDDIN QIZI","XAMIDJANOV NOZIMJON NE‘MAT O‘G‘LI","XOSHIMJONOV DIYORBEK ELYORJON O‘G‘LI","SHAMSHIDDINOVA RUXSHONA AZIZJON QIZI","SHERMATOV ABDULAZIZ AKRAMJON O‘G‘LI"],"8-E":["IKROMJANOVA SHOHSANAM ISROILJON QIZI","KOMILJANOVA MEHRIBONU DILMUROD QIZI","KOMILOV SOHIBBEK SOBIRJON O‘G‘LI","SHERMIRZAYEV BEHRUZBEK BEXZOD O‘G‘LI","ABDUVOXOBOV MUSTAFOBEK SHUXRATJON O‘G‘LI","ABDUQODIROVA MUBINA QOBILJON QIZI","ABDULXAMIDOV OTABEK AKMAL O‘G‘LI","ABDUSATTAROV JAXONGIR ISMOILJON O‘G‘LI","AKBARXO‘JAYEV YUSUFXON ABROR O‘G‘LI","ALISHEROV BEXRUZBEK BAXTIYOROVICH","ATABAYEVA MOXLAROYIM UMIDILLO QIZI","AXMADJONOV FARRUXBEK AKMALJON O‘G‘LI","AXMADJONOVA NOZIMA G‘ULOMJON QIZI","BOYMIRZAYEV BAXODIR BAXTIYOR O‘G‘LI","IKROMJONOVA MARXABO BAXROMJON QIZI","KAMOLOVA SABINA SOBIRJON QIZI","KOMILJONOVA ASALXON ODIL QIZI","QODIRJANOV BOBURJON BAXODIR O‘G‘LI","MAMADURAYIMOV ABBOSBEK KOMILJON O‘G‘LI","MAXAMADIBROXIMOV UMIDJON ABDURASUL O‘G‘LI","MAXAMADOV SARDORBEK SODIQJON O‘G‘LI","ORTIQBOYEVA MUSHARRAF ALISHER QIZI","RUSTAMJONOV ASADBEK DOSTONJON O‘G‘LI","TOKTOMAMBETOV DIYORBEK ELMUROD O‘G‘LI","UMARJONOV XAYOTBEK NODIRJON O‘G‘LI","UMAROV XAMIDULLO XAYRULLO O‘G‘LI","XOJIMAMATOVA MAVLUDAXON NURITDIN QIZI","SHARIPXOJAYEV ABBOS ILXOMJON O‘G‘LI","EGAMBERDIYEV MUHAMMADYUSUF MUSLIMJON O‘G‘LI","ERKINBOYEV ODILBEK OYBEK O‘G‘LI","YULDASHALIYEVA RUXSHONA DILMUROD QIZI","YAXYOMIRZAYEVNA SHAXRIZO SHOXRUX QIZI"],"8-F":["AXMADJONOVA DILOBAR A‘ZAMJON QIZI","ABDUKARIMOV SAMANDAR ABDUG‘AFFOR O‘G‘LI","ABDUSATTAROV ZOIRBEK ZAFARJON O‘G‘LI","ALIJANOV KAMRONBEK ELYOR O‘G‘LI","AXMADOVA GUZALOY A‘ZAMJON QIZI","G‘AFURJANOV SHUXRAT DILSHOD O‘G‘LI","G‘ULOMJONOVA RAYHONA ULUG‘BEK QIZI","DILSHODOV DIYORBEK DONIYOR O‘G‘LI","JAXONALIYEVA AZIZAXON ELMUROD QIZI","IBRAGIMOV SARDORBEK SOXIBJON O‘G‘LI","ILXOMJANOVA OYGUL SARDOROVNA","ILXOMJONOV ISFANDIYOR DONIYOROVICH","INOMADINOVA XALIMAXON IKROMJON QIZI","ISOQJANOV XURSHIDBEK OYBEK O‘G‘LI","KOMILJONOVA MADINABONU ISMOILJON QIZI","QUCHQAROVA MUBINABONU XASANBOY QIZI","QUCHQORBOYEV TEMURBEK ABDUMAJIT O‘G‘LI","MAMADALIYEVA DIYORAXON DILMURODOVNA","MAMADSHOYEVA ZARNIGOR MAMAJON QIZI","MAMURJANOVA MUNISA SHUXRATJON QIZI","OLIMJONOV BEXRUZBEK OLIMJON O‘G‘LI","RAXIMJONOV MUHAMMADALI ADXAMJON O‘G‘LI","RAXMATILLAYEVA KUMUSHBIBI ABDULXAMID QIZI","RUSTAMOV AKBAR ALISHEROVICH","TOJOXUNOV MUXAMMADRIZO MUXAMMADYUSUF O‘G‘LI","USUBBEKOV AZIZBEK ISLOMJON O‘G‘LI","SHERMIRZAYEVA MUAZZAM DILSHOD QIZI","ERGASHBOYEV JASURBEK DOLIMJON O‘G‘LI"],"9-A":["ABDUKARIMOVA MARJONA VALISHER QIZI","ABDURASULOV SHODIYORBEK ADXAMJON O‘G‘LI","ABDUXALILOVA YODGORA AZAMAT QIZI","ABSATTOROV SARVARBEK SAYDULLO O‘G‘LI","ALISHEROVA MARJONAXON ANVARJON QIZI","BAZARBAYEVA INTIZORBONU RAVSHANJON QIZI","BOQIJONOVA DIYORA OBIDJO N QIZI","VALIJANOVA MADINA OYBEK QIZI","ZOKIRJANOVA DURDONA FARXODJON QIZI","IKROMJONOVA RAYXONA ILXOMJON QIZI","QODIRJANOVA MUBINABONU ANVARJON QIZI","MAMADJANOVA MARXABO QOBULJON QIZI","MUMUNOV SHAXRIYOR RAVSHANBEK O‘G‘LI","ODILJONOVA ZILOLA XAYTBOY QIZI","OLIMJANOV OTABEK LUXMONJON O‘G‘LI","ORTIQBOYEVA SEVINCHOY NODIRBEK QIZI","SOBIRJONOVA MUBINA ZOKIRJON QIZI","SOLIYEV DOSTONBEK RUSTAMOVICH","SOLIYEV SARDORBEK YODGORJON O‘G‘LI","TOSHPULATOV MANSURALI ANVARJON O‘G‘LI","TULQINBOYEV JASURBEK FARXOD O‘G‘LI","TURG‘UNBOYEVA PARIZODA OCHILBEK QIZI","TURGUNOVA RAYXONA ALISHER QIZI","TURSUNBAYEV FIRDAVSBEK ADXAMJON O‘G‘LI","XAYRULLAVA MADINABONU XABIBILLO QIZI","XAKIMOVA KAMOLA SHUXRATJON QIZI","XOLMIRZAYEVA MUBINA MUZAFFAR QIZI","XOMITXONOV JAMSHIDBEK ISMOILJON O‘G‘LI","XUDAYNAZAROVA SARVINOZ RO‘ZIMAMATOVNA","SHOKIROVA IRODAXON BEKZODJONOVNA","ERGASHEVA OZODAXON RAVSHANBEK QIZI"],"9-B":["ABDIXALILOVA MOHICHEXRABONU XAMIDILLO QIZI","ABDUVOXIDOVA MUMTOZBEGIM ABDUBANNO QIZI","ABDUQAXXAROV KAMOLBEK MURODJON O‘G‘LI","ABDULHAMIDOVA ZIYODA RAVSHANBEK QIZI","ABDUMALIKOV BAXODIR ABDULXAKIM O‘G‘LI","AKRAMJANOVA SHAHLO SOBIRJON QIZI","AXMADALIYEV AZIZBEK ALISHER O‘G‘LI","AXMADJONOV RIVOJIDDIN ADXAMJON O‘G‘LI","AXMADJONOVA GULCHIROY ANVARJON QIZI","AXMADOV ABDULLOH ADXAMJON O‘G‘LI","VALIJONOV DIYORBEK OTABEK O‘G‘LI","KOMILJONOV AZIZBEK AZIMJON O‘G‘LI","QODIRJONOV SHAXRIYOR SHAVKATJON O‘G‘LI","MAMAJANOV ZILOLA BAXTIYOR QIZI","MAXAMMATJONOV ZOXIDJON ZOKIRJON O‘G‘LI","MAXMADJONOV SUXROBBEK MA‘RUFJON O‘G‘LI","MAXMUDJONOV MUSTAFO OLIMJON O‘G‘LI","MUXAMADMUSOYEV BAXTIYOR OTABEK O‘G‘LI","MUXAMMADISMOILOV MUXAMMADMUSTAFO","NOMONJONOV AXRORBEK ADXAMJON O‘G‘LI","RAXIMJONOVA SHODIYAXON AXMADJON QIZI","RUZMAMATOVA RAYXONA MURODOVNA","RUSTAMJANOV ULUG‘BEK ABDURASHID O‘G‘LI","SOBIROVA FERUZA XURSHID QIZI","TURABOYEVA MARJONA MA‘MUR QIZI","TURAXONOVA SHAHINABONU ISROILJON QIZI","TUXTABAYEVA MADINABONU BAXTIYOR QIZI","XASANBOYEVA ZUHRA BAXROMJON QIZI","XASANBOYEVA FOTIMA BAXROMJON QIZI","ERGASHEV NURMUHAMMAD BAXTIYOR O‘G‘LI","YULCHIBAYEV KAMRONBEK SARDOR O‘G‘LI"],"9-D":["ABDIXALILOVA FARANGIZ ABDUJALIL QIZI","ABDUVOHIDOVA MADINABONU SIROJIDDIN QIZI","AXMEDOV OG‘ABEK SHAVKATJON O‘G‘LI","DAVLATALIYEVA MADINA QILICHBEK QIZI","DAVRONBEKOV ASADBEK ASILJON O‘G‘LI","JURABOYEV RUSTAMJON RAXIMJON O‘G‘LI","ZOKIRJONOVA ZUXRAXON AKBARJON QIZI","ZOKIRJONOVA FOTIMAXON AKBARJON QIZI","IBRAGIMJONOV AXMADJON UKTAMJONOVICH","IKROMOV INOMJON ILXOMJON O‘G‘LI","ILXOMJONOVA MUNISA ALISHER QIZI","ISLOMJONOV UMIDJON UKTAMJON O‘G‘LI","KENJABAYEVA GULBAXOR BAXRIDDIN QIZI","RUZIBAYEV QUVONCHBEK BEXZOD O‘G‘LI","SOBIRJANOV ANVARJON MASHRABJON O‘G‘LI","TOXIRJONOV JASURBEK TOXIRJON O‘G‘LI","TOXIRJONOVA MALIKA ALISHER QIZI","TO‘LQINJONOV ULUG‘BEK IZZATULLA O‘G‘LI","TURSUNBOYEVA GO‘ZAL AKMAL QIZI","TURSUNPULATOVA MOXINUR AXADJON QIZI","USMONJONOV TEMURBEK BAXRIDDIN O‘G‘LI","XAKIMJANOV ISLOM ILXOM O‘G‘LI","XAMRAYEV IBROXIM KOMILJON O‘G‘LI","XASANBOYEVA MUSHTARIYBONU DILMUROD QIZI","XOJIDEDAYEV SHAHZODBEK SHUHRAT O‘G‘LI","XOTAMJONOV SHAXRIYOR DONIYOR O‘G‘LI","SHAMSIDDINOV SANJARBEK SADRIDDIN O‘G‘LI","SHOKIRJONOVA BARNOXON SHARIFJON QIZI","ERGASHBAYEV SHOXJAXON XUSAN O‘G‘LI"],"9-E":["ABDUG‘ANIYEVA RAYXONA ABDUJABBOR QIZI","ABDUJALILOV FIRDAVS ABDUMALIK O‘G‘LI","ABDUMUMINOV ARABBOY ABROR O‘G‘LI","ABDUFATTOXOVA NIGINA OLTINBEK QIZI","ADASHALIYEVA GULSANAM MUXAMMADZOKIR QIZI","AXMADJANOVA NIGINABONU XASAN QIZI","A‘LOXO‘JAYEVA DILNOZA ANVARJON QIZI","G‘ULOMJONOV ABDULVOSIT TOHIRJON O‘G‘LI","JURABOYEV ELDOR XASANOVICH","QAMOLDINOV AXMADBEK AKRAMJON O‘G‘LI","QODIRJONOV BEKZOD FOZILJONOVICH","QOSIMBOYEV YAXYOBEK BAXODIR O‘G‘LI","MAXAMMADJONOV ABDURAXMON BAXTIYOR O‘G‘LI","ODILJONOVA MUSHTARIYBONU SOXIBJON QIZI","RAXIMJANOVA SHAXINABONU MUZAFFAR QIZI","RAXMATILLAYEV OYBEK XAMIDILLO O‘G‘LI","RUSTAMJONOVA DIYORABEGIM DOSTONJON QIZI","SOLIJONOVA SEVINCH KOZIMJON QIZI","TOJIMIRZAYEVA SHAXZODA XUSANBOY QIZI","UBAYDULLAYEV BEXRUZBEK JAXONGIR O‘G‘LI","O‘RAZMATOVA GULNOZA AZAMAT QIZI","XAMITBOYEV JOXONGIR USMIRJON O‘G‘LI","XASANBOYEVA RUXSORA ADXAMJON QIZI","XOLIQOV SHOXJAXON ABDURASHID O‘G‘LI","SHAVKATOVA HUSNIDA NOSIR QIZI","ERGASHBOYEV SUHROBJON SOXIBJON O‘G‘LI","YUSUFXODJAYEVA RUKIYAXON XAMIDJON QIZI"],"10-A":["ABDUNABIYEVA MUNISAXON MIRZOXID QIZI","ABDUVALIYEV ABRORJON ADXAMJON O‘G‘LI","AXMADJANOVA MARJONA BUNYODJON QIZI","ERGASHBOYEVA MADINABONU ODILBEK QIZI","ERGASHEVA KUMUSHBIBI TUXTABOY QIZI","ERKINOVA XONZODAXON DILSHOD QIZI","IBRAGIMOVA DILAFRUZ XASANBOY QIZI","IKROMJONOV AKBARJON AKRAMJON O‘G‘LI","JURAXANOVA DURDONAXON ULUG‘BEK QIZI","MAXAMADOVA MUBINAXON SODIQJON QIZI","MAXMADJONOV FAZLIDDIN AKBAR O‘G‘LI","MURODILLAYEVA E‘ZOZAXON DILSHODBEK QIZI","RUSTAMOVA RUXSHONA BOTIRQIZI","SHAMSIDDINOVA OYDINA RAXIMJON QIZI","SHERMAMATOV NURMUHAMMAD BAXROMJON O‘G‘LI","VOXIDJANOVA MUSHTARIYBONU BEGZOD QIZI","XOLMIRZAYEVA BARCHINOY BAXTIYOR QIZI"],"10-B":["ABDUG‘APPOROVA BARCHINOY ABDURASHID QIZI","ABDULXAMIDOVA DILSHODA MUZAFFAR QIZI","ABDUQODIROV SHERMUHAMMAD MAXMUDJON O‘G‘LI","ABDUVAXOBOVA NOZANIN SHUXRATJON QIZI","AKRAMJONOVA MAHLIYOXON ANVARJON QIZI","AKRAMOVA OYDINA AKMALJON QIZI","BEKMIRZAYEVA DURDONA ELMUROD QIZI","DEDABAYEVA GULMIRAXON DILSHOD QIZI","ERGASHBOYEVA SABRINA XASANBOY QIZI","IBROXIMOVA MUXAYYOXON ISOQJON QIZI","ISMONJANOVA GO‘ZALXON FARXOD QIZI","ISMONJONOV IXLOSBEK ILXOMJON O‘G‘LI","MAHMUDJONOVA DILNOZA ADHAMJON QIZI","MAXAMADIBROXIMOVA MARJONA ABDURASUL QIZI","O‘ROLOV AKOBIR AZAMATOVICH","ORTIQBAYEVA GULYORA ALIMARDON QIZI","RUSTAMOVA MUSHTARIY BAXTIYOR QIZI","SHERMIRZAYEVA RUXSHONA SHERZOD QIZI","TOXIROV MIRZIYO MIRZOHID O‘G‘LI","TURSUNBOYEVA MUQADDASXON SHOKIRJON QIZI","UMARJONOVA DILNAVOZ NODIRJON QIZI","XAMDAMOVA AZIZA ALIMARDON QIZI","XIKMATILLAYEVA MUBINA OYOSBOY QIZI"],"11-A":["ABDUG‘ANIYEV ADHAMJON MUZAFFAR O‘G‘LI","ABDUKARIMOV AZAMJON MAVLONBOY O‘G‘LI","BAXROMJANOV IQBOLJON SALIMJON O‘G‘LI","BOZORBOYEVA MADINABONU SHUHRATJON QIZI","G‘OFURJONOVA GULRUX G‘ULOMJON QIZI","ISOQJANOVA MUSHTARIYBONU BAXTIYOR QIZI","ISOQJONOVA NODIRA QODIRJON QIZI","LUTFILLAYEVA INOYATBONU NOSIRJON QIZI","MAMADALIYEVA DURDONA DILMUROD QIZI","RAXIMOVA XOSILA ILXOMJON QIZI","RUSTAMOVA MUNIRA NOZIMJON QIZI","TURSUNBOYEVA SARVINOZ NODIRBEK QIZI","USMONJONOVA MASHHURAXON BAXRIDDIN QIZI","XASANBOYEVA MARJONA ADHAMJON QIZI","XOSHIMJONOV NURBEK ELYORJON O‘G‘LI","AHMADJONOV ZOYIRJON A‘ZAMJON O‘G‘LI","BOQIJONOVA BIBIRUXSORA OBIDJON QIZI","G‘OFUROV JALOLIDDIN JAMOLIDDIN O‘G‘LI","MAMAJANOVA MADINABONU SAYFIDDIN QIZI","MAXAMMATJONOV FAXRIDDIN FARXODJON O‘G‘LI","MAXMADJONOVA MUBINAXON XABIBULLO QIZI","MASHRABJONOVA XILOLAXON MAXMUDJON QIZI","MUMINJONOVA GULZODA ORIFJON QIZI","NOMONJONOVA KUMUSHOY A‘ZAMJON QIZI","OLIMJANOVA DILSHODA ANVAR QIZI","SAIDJALOLOV MIRJALOL MUZAFFAR O‘G‘LI","UMARALIYEVA SHABBONA DILSHOD QIZI","ERKINBOYEVA FARZONA ILXOM QIZI"],"11-B":["ERKINOV AZIZBEK MUXIDDINOVICH","ABDUNABIYEV OTABEK AVAZBEK O‘G‘LI","ABDUXALILOVA KUMUSHXON AKRAMJON QIZI","AKBARALIYEV AZIZBEK BAXROMJON O‘G‘LI","AHMADALIYEVA MARHABO NAZIRJON QIZI","AHMADJONOVA ZULAYXO MAXMUDJON QIZI","JALOLXANOVA DIYORA SANJARBEK QIZI","ZOKIRJONOVA SHOXSANAMXON SHOKIRJON QIZI","INOMADINOVA XANIFAXON IKROMJON QIZI","KOMILJONOVA MAHLIYO ILHOMJON QIZI","MAMADSHOYEVA MUXTARAM MAMAJON QIZI","MAHAMATJONOVA MUHAYYO RUSTAMJON QIZI","MURATOVA DILAFRO‘Z XAYATULLO QIZI","NURMAMATOV JAVOHIR BAXODIR O‘G‘LI","ORTIQALIYEVA ASAL BAXTIYOR QIZI","OTAXONOVA MUXTASAR SHOKIRJON QIZI","TOJIMAMATOVA NOILAXON ABDULLAJON QIZI","TOSHTEMIROVA MUMTOZBEGIM RAVSHANBEK QIZI","TULQINBOYEV JAMSHIDBEK FARXOD O‘G‘LI","TULQINBOYEVA SAYYORA SUR‘AT QIZI","UMARXONOVA MOXINISOBEGIM SHUKRULLO QIZI","XAKIMOV MIRXAYOT SHERZOD O‘G‘LI","XASANBOYEV AXADJON AKMALJON O‘G‘LI","SHARIFBOYEV ISABEK ZOKIRJON O‘G‘LI","YUSUVALIYEVA OYDINA ORIFJON QIZI","YUSUPOVA MUSHARRAF HABIBULLO QIZI"]};
+let all = [], col = null, mode = "local", excused = null, clearTimer = null;
+const LS = "kech_qolganlar_v2";
+
+function loadLocal() {
+  try {
+    all = JSON.parse(localStorage.getItem(LS) || "[]") || [];
+    if (!all.length) {
+      const old = JSON.parse(localStorage.getItem("kech_qolganlar_v1") || "{}") || {};
+      Object.keys(old).forEach(d => old[d].forEach(s => all.push(Object.assign({}, s, { date: d }))));
+    }
+  } catch (e) { all = []; }
+}
+function saveLocal() { try { localStorage.setItem(LS, JSON.stringify(all)); } catch (e) {} }
+function setState() {
+  $("dbstate").textContent = mode === "db" ? "Ma’lumotlar bazasi: umumiy, barcha qurilmalarda bir xil." : "Ma’lumotlar bazasi: faqat shu qurilmada saqlanadi.";
+}
+function say(t, err) { const m = $("msg"); m.textContent = t; m.className = "msg" + (err ? " err" : ""); }
+
+async function addRec(r) {
+  r.id = Date.now() + "" + Math.floor(Math.random() * 1000);
+  if (mode === "db") await col.doc(r.id).set(r);
+  else { all.push(r); saveLocal(); render(); }
+}
+async function delRec(id) {
+  if (mode === "db") await col.doc(id).delete();
+  else { all = all.filter(r => r.id !== id); saveLocal(); render(); }
+}
+async function clearDay(day) {
+  if (mode === "db") await Promise.all(all.filter(r => r.date === day).map(r => col.doc(r.id).delete()));
+  else { all = all.filter(r => r.date !== day); saveLocal(); render(); }
+}
+function pdate(s) { const a = s.split("-").map(Number); return new Date(a[0], a[1] - 1, a[2]); }
+function ymd(t) { return t.getFullYear() + "-" + pad(t.getMonth() + 1) + "-" + pad(t.getDate()); }
+function weekStart(d) { const t = pdate(d); t.setDate(t.getDate() - ((t.getDay() + 6) % 7)); return ymd(t); }
+function weekEnd(d) { const t = pdate(weekStart(d)); t.setDate(t.getDate() + 6); return ymd(t); }
+const wkKey = r => keyOf(r) + "#" + weekStart(r.date);
+function counts() { const c = {}, run = {}, fr = {}; all.slice().sort((a, b) => (a.date + a.time + a.id < b.date + b.time + b.id ? -1 : 1)).forEach(r => { const k = wkKey(r); run[k] = (run[k] || 0) + 1; c[r.id] = run[k]; if (r.excused === true) c["f" + r.id] = 0; else { fr[k] = (fr[k] || 0) + 1; c["f" + r.id] = fr[k]; } }); return c; }
+
+function reasonCell(s) {
+  if (s.excused === true) return "<span class='tag yes'>Sababli · jarimasiz</span>" + (s.reasonText ? " " + esc(s.reasonText) : "");
+  if (s.excused === false) return "<span class='tag no'>Sababsiz</span>";
+  return "—";
+}
+function setExcused(v) {
+  excused = v;
+  $("yes").className = "ghost" + (v === true ? " on-yes" : "");
+  $("no").className = "ghost" + (v === false ? " on-no" : "");
+  $("reasonText").hidden = $("chips").hidden = v !== true;
+}
+
+function render() {
+  const day = $("date").value, cnt = counts();
+  const list = all.filter(r => r.date === day).sort((a, b) => (a.time < b.time ? -1 : 1));
+  $("count").textContent = "Jami: " + list.length;
+  $("empty").style.display = list.length ? "none" : "block";
+  $("rows").innerHTML = list.map((s, i) => {
+    const n = cnt[s.id];
+    return "<tr><td class='n'>" + (i + 1) + "</td><td class='name'>" + esc(s.name) + (cnt["f" + s.id] >= 2 ? "<span class='fine'>JARIMA</span>" : "") + "<span class='wk'>hafta: " + n + "</span>" +
+      "</td><td class='c'>" + esc(s.cls) + "</td><td class='t'>" + fmtD(s.date) + " " + s.time +
+      "</td><td class='why'>" + reasonCell(s) + "</td><td class='act'><button class='del' data-id='" + s.id + "'>O’chirish</button></td></tr>";
+  }).join("");
+
+  const groups = {};
+  all.filter(r => r.excused !== true && (selWeek === "all" || weekStart(r.date) === selWeek)).forEach(r => { const k = wkKey(r); (groups[k] = groups[k] || []).push(r); });
+  const fines = Object.values(groups).filter(g => g.length >= 2).sort((a, b) => (weekStart(a[0].date) < weekStart(b[0].date) ? 1 : weekStart(a[0].date) > weekStart(b[0].date) ? -1 : b.length - a.length));
+  $("fines").innerHTML = fines.length ? fines.map(g =>
+    "<div class='fr'><b>" + esc(g[0].name) + "</b> · " + esc(g[0].cls) + " <span class='fine'>JARIMA</span><span class='wk'>hafta: " + g.length + "</span><small>Hafta: " + fmtD(weekStart(g[0].date)) + " – " + fmtD(weekEnd(g[0].date)) + " · Sanalar: " +
+    g.map(r => fmtD(r.date) + " " + r.time).sort().join(", ") + "</small></div>").join("") : "<div class='empty'>Hozircha jarimaga tortilganlar yo’q.</div>";
+  renderAll(cnt);
+  renderStats();
+  weekCheck();
+}
+
+function renderAll(cnt) {
+  const cw = weekStart(today());
+  const wks = Array.from(new Set(all.map(r => weekStart(r.date)).concat([cw]))).sort().reverse();
+  if (selWeek !== "all" && wks.indexOf(selWeek) < 0) selWeek = cw;
+  $("wsel").innerHTML = wks.map(w => "<option value='" + w + "'>" + fmtD(w) + " – " + fmtD(weekEnd(w)) + (w === cw ? " (joriy hafta)" : "") + "</option>").join("") + "<option value='all'>Barcha haftalar</option>";
+  $("wsel").value = selWeek;
+  const list = all.filter(r => selWeek === "all" || weekStart(r.date) === selWeek).sort((a, b) => (a.date + a.time < b.date + b.time ? 1 : -1));
+  $("allcount").textContent = "Jami yozuvlar: " + list.length;
+  let html = "", cur = "";
+  list.forEach(s => {
+    if (s.date !== cur) { cur = s.date; html += "<div class='dh'>" + fmtD(cur) + "</div>"; }
+    const n = cnt[s.id];
+    html += "<div class='ar'><div class='ai'><b>" + esc(s.name) + "</b>" + (cnt["f" + s.id] >= 2 ? "<span class='fine'>JARIMA</span>" : "") + "<span class='wk'>hafta: " + n + "</span><small> · " + esc(s.cls) + " · " + s.time + " · </small>" + reasonCell(s) + "</div><button class='del' data-id='" + s.id + "'>O’chirish</button></div>";
+  });
+  $("alllist").innerHTML = html || "<div class='empty'>Hali hech kim belgilanmagan.</div>";
+}
+
+$("date").value = today();
+$("fdate").value = today();
+$("time").value = nowStr();
+$("now").onclick = () => { $("fdate").value = today(); $("time").value = nowStr(); };
+$("yes").onclick = () => setExcused(true);
+$("no").onclick = () => setExcused(false);
+
+$("add").onclick = async () => {
+  const name = $("name").value.trim(), cls = $("cls").value.trim();
+  if (!cls) { say("Avval sinfni tanlang.", true); return; }
+  if (!name || pickedName !== name) { say("Ismni yozib, pastdagi ro’yxatdan o’quvchini tanlang.", true); return; }
+  if (excused === null) { say("Sababli yoki sababsizligini tanlang.", true); return; }
+  const rec = { name, cls, date: $("fdate").value || today(), time: $("time").value || nowStr(), excused, reasonText: excused ? $("reasonText").value.trim() : "" };
+  const n = all.filter(r => wkKey(r) === wkKey(rec) && r.excused !== true).length + 1;
+  try { await addRec(rec); } catch (e) { say("Saqlab bo’lmadi. Ruxsat yoki internetni tekshiring.", true); return; }
+  $("name").value = ""; pickedName = null; $("picked").hidden = true; $("res").hidden = true; $("reasonText").value = "";
+  setExcused(null); $("fdate").value = today(); $("time").value = nowStr(); $("name").focus();
+  $("date").value = rec.date; render();
+  if (rec.excused !== true && n >= 2) say(name + " shu hafta " + n + "-marta sababsiz kech qoldi — JARIMA!", true); else say(name + (rec.excused ? " sababli deb belgilandi — jarimasiz." : " belgilandi."));
+};
+
+$("rows").onclick = async e => {
+  const id = e.target.dataset && e.target.dataset.id;
+  if (!id) return;
+  try { await delRec(id); } catch (err) { say("O’chirib bo’lmadi.", true); }
+};
+
+function resetClear() { clearTimeout(clearTimer); clearTimer = null; $("clear").textContent = "Kunni tozalash"; $("clear").style.color = ""; }
+$("clear").onclick = async () => {
+  const day = $("date").value;
+  if (!all.some(r => r.date === day)) { say("Bu kunda tozalanadigan ro’yxat yo’q.", true); return; }
+  if (!clearTimer) {
+    $("clear").textContent = "Ha, tozalash";
+    $("clear").style.color = "var(--danger)";
+    clearTimer = setTimeout(() => { resetClear(); say(""); }, 4000);
+    say("Tasdiqlash uchun tugmani yana bir marta bosing.", true);
+    return;
+  }
+  resetClear();
+  try { await clearDay(day); say(fmtD(day) + " ro’yxati tozalandi."); } catch (e) { say("Tozalab bo’lmadi.", true); }
+};
+
+$("date").onchange = () => { say(""); render(); };
+$("name").addEventListener("keydown", e => { if (e.key === "Enter") { const b = $("res").querySelector("button"); if (b) b.click(); } });
+$("cls").addEventListener("keydown", e => { if (e.key === "Enter") $("add").click(); });
+
+$("dl").onclick = async () => {
+  const day = $("date").value, cnt = counts();
+  const list = all.filter(r => r.date === day).sort((a, b) => (a.time < b.time ? -1 : 1));
+  if (!list.length) { say("Yuklab olish uchun ro’yxat bo’sh.", true); return; }
+  const lines = [["№", "F.I.SH", "Sinf", "Sana", "Kelgan vaqti", "Sabab holati", "Sabab", "Haftada kech qolish", "Jarima"]].concat(list.map((s, i) => {
+    const n = cnt[s.id];
+    return [i + 1, s.name, s.cls, fmtD(s.date), s.time, s.excused === true ? "Sababli" : s.excused === false ? "Sababsiz" : "", s.reasonText || "", n, cnt["f" + s.id] >= 2 ? "JARIMA" : ""];
+  }));
+  try {
+    const dls = await claude.use("downloads");
+    if (!dls) { say("Bu oynada yuklab olish mavjud emas. Sahifani claude.ai’da oching.", true); return; }
+    await dls.save({ filename: "kech_qolganlar_" + day + ".xlsx", data: makeXlsx(lines, "Kech qolganlar") });
+    say("Fayl saqlandi.");
+  } catch (err) {
+    say(err && err.code === "declined" ? "Yuklab olish bekor qilindi." : "Yuklab olib bo’lmadi.", true);
+  }
+};
+
+const norm = s => String(s).toLowerCase().replace(/[`'’‘ʻʼ]/g, "").replace(/\s+/g, " ").trim();
+let pickedName = null;
+Object.keys(ROSTER).forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c + " sinf (" + ROSTER[c].length + " ta)"; $("cls").appendChild(o); });
+function showRes() {
+  const c = $("cls").value, v = $("name").value, box = $("res");
+  if (!c) { box.hidden = true; return; }
+  const toks = norm(v).split(" ").filter(Boolean), day = today();
+  const hits = ROSTER[c].filter(n => { const x = norm(n); return toks.every(t => x.indexOf(t) >= 0); });
+  const done = {}; all.forEach(r => { if (r.date === day && r.cls === c) done[norm(r.name)] = 1; });
+  let html = hits.map(n => '<button type="button" data-n="' + esc(n) + '">' + esc(n) + (done[norm(n)] ? "<small>bugun belgilangan</small>" : "") + "</button>").join("");
+  const t = v.trim().toUpperCase();
+  if (t && !hits.length) html = '<button type="button" data-n="' + esc(t) + '">Ro’yxatda yo’q. “' + esc(t) + '” ni qo’lda qo’shish</button>';
+  box.innerHTML = html || "<div class='empty'>Bu sinfda o’quvchi yo’q.</div>";
+  box.hidden = false;
+}
+$("res").onclick = e => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  pickedName = b.dataset.n; $("name").value = pickedName; $("res").hidden = true;
+  $("picked").textContent = "Tanlandi: " + pickedName + " (" + $("cls").value + ")"; $("picked").hidden = false;
+};
+$("name").addEventListener("input", () => { pickedName = null; $("picked").hidden = true; showRes(); });
+$("name").addEventListener("focus", showRes);
+$("cls").addEventListener("change", () => { pickedName = null; $("name").value = ""; $("picked").hidden = true; showRes(); });
+
+const EXAMPLES = ["Kasal bo’lib qolgan", "Shifokor qabulida bo’lgan", "Transport kechikdi", "Yo’lda tirbandlik / avariya", "Qor-yomg’ir, yo’l yopilgan", "Uyda favqulodda holat", "Ota-onasi maktabga olib keldi"];
+$("chips").innerHTML = EXAMPLES.map(t => '<button type="button" class="ghost" data-t="' + t + '">' + t + "</button>").join("");
+$("chips").onclick = e => { const t = e.target.dataset && e.target.dataset.t; if (t) $("reasonText").value = t; };
+
+function renderStats() {
+  const day = today(), cw = weekStart(day), td = all.filter(r => r.date === day);
+  $("stToday").textContent = td.length;
+  $("stYes").textContent = td.filter(r => r.excused === true).length;
+  $("stNo").textContent = td.filter(r => r.excused !== true).length;
+  const tally = list => { const c = {}; list.forEach(r => { const k = r.cls || "—"; c[k] = (c[k] || 0) + 1; }); return Object.keys(c).map(k => [k, c[k]]).sort((a, b) => b[1] - a[1]); };
+  const wk = tally(all.filter(r => weekStart(r.date) === cw)), al = tally(all);
+  $("topCls").innerHTML = wk.length ? "Bu hafta eng ko’p kech qolgan sinf: <b>" + esc(wk[0][0]) + "</b> (" + wk[0][1] + " marta)" : "Bu hafta hali kech qolgan yo’q.";
+  $("rank").innerHTML = wk.slice(0, 5).map((x, i) => "<div class='rk'><span>" + (i + 1) + ". " + esc(x[0]) + "</span><b>" + x[1] + "</b></div>").join("") +
+    (al.length ? "<div class='rk' style='color:var(--muted)'><span>Barcha vaqt bo’yicha eng ko’p:</span><span>" + esc(al[0][0]) + " (" + al[0][1] + ")</span></div>" : "");
+}
+
+let selWeek = weekStart(today()), lastCW = selWeek, autoTried = {};
+$("wsel").onchange = () => { selWeek = $("wsel").value; render(); };
+
+function exportedWeeks() { try { return JSON.parse(localStorage.getItem("kech_exported") || "[]") || []; } catch (e) { return []; } }
+function pendingWeeks() {
+  const cur = weekStart(today()), ex = exportedWeeks();
+  return Array.from(new Set(all.map(r => weekStart(r.date)))).filter(w => w < cur && ex.indexOf(w) < 0).sort();
+}
+async function exportWeek(w) {
+  const m = $("wkmsg"), cnt = counts();
+  const list = all.filter(r => weekStart(r.date) === w).sort((a, b) => (a.date + a.time < b.date + b.time ? -1 : 1));
+  const rows = [["№", "F.I.SH", "Sinf", "Sana", "Kelgan vaqti", "Sabab holati", "Sabab", "Haftada kech qolish", "Jarima"]].concat(list.map((s, i) =>
+    [i + 1, s.name, s.cls, fmtD(s.date), s.time, s.excused === true ? "Sababli" : s.excused === false ? "Sababsiz" : "", s.reasonText || "", cnt[s.id], cnt["f" + s.id] >= 2 ? "JARIMA" : ""]));
+  try {
+    const dls = await claude.use("downloads");
+    if (!dls) { m.textContent = "Bu oynada yuklab olish mavjud emas. Sahifani claude.ai’da oching."; return; }
+    await dls.save({ filename: "hafta_" + w + "_" + weekEnd(w) + ".xlsx", data: makeXlsx(rows, "Hafta") });
+    const ex = exportedWeeks(); ex.push(w);
+    try { localStorage.setItem("kech_exported", JSON.stringify(ex)); } catch (e) {}
+    m.textContent = ""; weekCheck();
+  } catch (err) {
+    m.textContent = err && err.code === "declined" ? "Yuklab olish bekor qilindi. Tugma orqali qayta urinib ko’ring." : "Yuklab olib bo’lmadi. Tugma orqali qayta urinib ko’ring.";
+  }
+}
+function weekCheck() {
+  const p = pendingWeeks(), b = $("wkbanner");
+  if (!p.length) { b.hidden = true; return; }
+  const w = p[0], n = all.filter(r => weekStart(r.date) === w).length;
+  $("wktext").textContent = "O’tgan hafta (" + fmtD(w) + " – " + fmtD(weekEnd(w)) + ") ro’yxati yuklab olinmagan. Yozuvlar: " + n + " ta.";
+  b.hidden = false;
+  if (!autoTried[w]) { autoTried[w] = true; exportWeek(w); }
+}
+$("wkbtn").onclick = () => { const p = pendingWeeks(); if (p.length) exportWeek(p[0]); };
+setInterval(() => {
+  const cw = weekStart(today());
+  if (cw !== lastCW) { if (selWeek === lastCW) selWeek = cw; lastCW = cw; $("date").value = today(); $("fdate").value = today(); render(); }
+  else { weekCheck(); renderStats(); }
+}, 60000);
+
+$("alllist").onclick = async e => {
+  const id = e.target.dataset && e.target.dataset.id;
+  if (!id) return;
+  try { await delRec(id); } catch (err) { const m = $("msg2"); m.textContent = "O’chirib bo’lmadi."; m.className = "msg err"; }
+};
+
+$("dlall").onclick = async () => {
+  const say2 = (t, err) => { const m = $("msg2"); m.textContent = t; m.className = "msg" + (err ? " err" : ""); };
+  const cnt = counts();
+  const list = all.filter(r => selWeek === "all" || weekStart(r.date) === selWeek).sort((a, b) => (a.date + a.time < b.date + b.time ? -1 : 1));
+  if (!list.length) { say2("Yuklab olish uchun ro’yxat bo’sh.", true); return; }
+  const lines = [["№", "F.I.SH", "Sinf", "Sana", "Kelgan vaqti", "Sabab holati", "Sabab", "Haftada kech qolish", "Jarima"]].concat(list.map((s, i) => {
+    const n = cnt[s.id];
+    return [i + 1, s.name, s.cls, fmtD(s.date), s.time, s.excused === true ? "Sababli" : s.excused === false ? "Sababsiz" : "", s.reasonText || "", n, cnt["f" + s.id] >= 2 ? "JARIMA" : ""];
+  }));
+  try {
+    const dls = await claude.use("downloads");
+    if (!dls) { say2("Bu oynada yuklab olish mavjud emas. Sahifani claude.ai’da oching.", true); return; }
+    await dls.save({ filename: selWeek === "all" ? "kech_qolganlar_hammasi.xlsx" : "hafta_" + selWeek + "_" + weekEnd(selWeek) + ".xlsx", data: makeXlsx(lines, "Kech qolganlar") });
+    say2("Fayl saqlandi.");
+  } catch (err) {
+    say2(err && err.code === "declined" ? "Yuklab olish bekor qilindi." : "Yuklab olib bo’lmadi.", true);
+  }
+};
+
+loadLocal(); setState(); render();
+(async () => {
+  try {
+    const db = await claude.use("db");
+    if (!db) return;
+    col = db.collection("late"); mode = "db"; setState();
+    col.onSnapshot(s => { all = s.docs.map(d => Object.assign({}, d.data(), { id: d.id })); render(); },
+      () => { mode = "local"; col = null; loadLocal(); setState(); render(); });
+  } catch (e) {}
+})();
+
+const clockEl = document.getElementById("liveClock");
+function updateLiveClock(){ if(clockEl){ const d=new Date(); const p=n=>String(n).padStart(2,"0"); clockEl.textContent=p(d.getDate())+"."+p(d.getMonth()+1)+"."+d.getFullYear()+" | "+p(d.getHours())+":"+p(d.getMinutes())+":"+p(d.getSeconds()); } }
+updateLiveClock(); setInterval(updateLiveClock,1000);
+</script>
+</body>
+</html>
