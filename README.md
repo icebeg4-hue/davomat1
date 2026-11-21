@@ -20,8 +20,8 @@ Kechikkan o‘quvchilarni sinf, sana, vaqt va sabab bo‘yicha qayd etuvchi mobi
 ## Android APK
 
 - Tayyor APK: [`Maktab-Davomat.apk`](Maktab-Davomat.apk).
-- Android loyihasi Capacitor orqali `android/` papkasida saqlanadi.
-- Ilovani qayta yig‘ish uchun Node.js, JDK 21 va Android SDK kerak. `npm install` va `npx cap sync android` dan so‘ng `android/` papkasida `gradlew assembleDebug` buyrug‘ini ishga tushiring.
+- Android loyihasining manba kodi [`android-source.zip`](android-source.zip) arxivida.
+- Ilovani qayta yig‘ish uchun arxivni loyiha ildiziga oching, so‘ng Node.js, JDK 21 va Android SDK bilan `npm install` va `npx cap sync android` buyrug‘ini bajaring. Keyin `android/` papkasida `gradlew assembleDebug` buyrug‘ini ishga tushiring.
 
 ## Asosiy imkoniyatlar
 
