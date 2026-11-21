@@ -17,6 +17,12 @@ Kechikkan o‘quvchilarni sinf, sana, vaqt va sabab bo‘yicha qayd etuvchi mobi
 2. Internet orqali ochilsa, SheetJS kutubxonasi CDN’dan yuklanadi.
 3. Ma’lumotlar brauzerda saqlanadi; mavjud Claude muhiti database API bilan ishlasa, baza avtomatik sinxronlanadi.
 
+## Android APK
+
+- Tayyor APK: [`Maktab-Davomat.apk`](Maktab-Davomat.apk).
+- Android loyihasi Capacitor orqali `android/` papkasida saqlanadi.
+- Ilovani qayta yig‘ish uchun Node.js, JDK 21 va Android SDK kerak. `npm install` va `npx cap sync android` dan so‘ng `android/` papkasida `gradlew assembleDebug` buyrug‘ini ishga tushiring.
+
 ## Asosiy imkoniyatlar
 
 - “Kech qolish”, “Erta ketish” va “Statistika / jarima” bo‘limlari orasida tab orqali almashish.
