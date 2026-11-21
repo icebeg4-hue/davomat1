@@ -23,6 +23,12 @@ Kechikkan o‘quvchilarni sinf, sana, vaqt va sabab bo‘yicha qayd etuvchi mobi
 - Android loyihasining manba kodi [`android-source.zip`](android-source.zip) arxivida.
 - Ilovani qayta yig‘ish uchun arxivni loyiha ildiziga oching, so‘ng Node.js, JDK 21 va Android SDK bilan `npm install` va `npx cap sync android` buyrug‘ini bajaring. Keyin `android/` papkasida `gradlew assembleDebug` buyrug‘ini ishga tushiring.
 
+## Windows va PWA
+
+- Windows o‘rnatish fayli: [`Maktab-Davomat-Nazorati-Setup.exe`](Maktab-Davomat-Nazorati-Setup.exe).
+- Brauzerda saytni oching, keyin brauzer menyusidan **Ilovani o‘rnatish** yoki **Install app** ni tanlang.
+- Ilova ikonasi uchun `icons/icon-512.png` va PWA fayllari `manifest.webmanifest`, `sw.js` ishlatiladi.
+
 ## Asosiy imkoniyatlar
 
 - “Kech qolish”, “Erta ketish” va “Statistika / jarima” bo‘limlari orasida tab orqali almashish.
