@@ -148,12 +148,12 @@ $("no").onclick = () => setExcused(false);
 $("add").onclick = async () => {
   const name = $("name").value.trim(), cls = $("cls").value.trim();
   if (!cls) { say("Avval sinfni tanlang.", true); return; }
-  if (!name || pickedName !== name) { say("Ismni yozib, pastdagi ro’yxatdan o’quvchini tanlang.", true); return; }
+  if (!name) { say("O’quvchini sinf ro’yxatidan tanlang.", true); return; }
   if (excused === null) { say("Sababli yoki sababsizligini tanlang.", true); return; }
   const rec = { name, cls, date: $("fdate").value || today(), time: $("time").value || nowStr(), excused, reasonText: excused ? $("reasonText").value.trim() : "" };
   const n = all.filter(r => wkKey(r) === wkKey(rec) && r.excused !== true).length + 1;
   try { await addRec(rec); } catch (e) { say("Saqlab bo’lmadi. Ruxsat yoki internetni tekshiring.", true); return; }
-  $("name").value = ""; pickedName = null; $("picked").hidden = true; $("res").hidden = true; $("reasonText").value = "";
+  populateNames(); $("reasonText").value = "";
   setExcused(null); $("fdate").value = today(); $("time").value = nowStr(); $("name").focus();
   $("date").value = rec.date; render();
   if (rec.excused !== true && n >= 2) say(name + " shu hafta " + n + "-marta sababsiz kech qoldi — JARIMA!", true); else say(name + (rec.excused ? " sababli deb belgilandi — jarimasiz." : " belgilandi."));
@@ -181,7 +181,7 @@ $("clear").onclick = async () => {
 };
 
 $("date").onchange = () => { say(""); render(); };
-$("name").addEventListener("keydown", e => { if (e.key === "Enter") { const b = $("res").querySelector("button"); if (b) b.click(); } });
+$("name").addEventListener("keydown", e => { if (e.key === "Enter") $("add").click(); });
 $("cls").addEventListener("keydown", e => { if (e.key === "Enter") $("add").click(); });
 
 $("dl").onclick = async () => {
@@ -201,29 +201,22 @@ $("dl").onclick = async () => {
 };
 
 const norm = s => String(s).toLowerCase().replace(/[`'’‘ʻʼ]/g, "").replace(/\s+/g, " ").trim();
-let pickedName = null;
 Object.keys(ROSTER).forEach(c => { const o = document.createElement("option"); o.value = c; o.textContent = c + " sinf (" + ROSTER[c].length + " ta)"; $("cls").appendChild(o); });
-function showRes() {
-  const c = $("cls").value, v = $("name").value, box = $("res");
-  if (!c) { box.hidden = true; return; }
-  const toks = norm(v).split(" ").filter(Boolean), day = today();
-  const hits = ROSTER[c].filter(n => { const x = norm(n); return toks.every(t => x.indexOf(t) >= 0); });
-  const done = {}; all.forEach(r => { if (r.date === day && r.cls === c) done[norm(r.name)] = 1; });
-  let html = hits.map(n => '<button type="button" data-n="' + esc(n) + '">' + esc(n) + (done[norm(n)] ? "<small>bugun belgilangan</small>" : "") + "</button>").join("");
-  const t = v.trim().toUpperCase();
-  if (t && !hits.length) html = '<button type="button" data-n="' + esc(t) + '">Ro’yxatda yo’q. “' + esc(t) + '” ni qo’lda qo’shish</button>';
-  box.innerHTML = html || "<div class='empty'>Bu sinfda o’quvchi yo’q.</div>";
-  box.hidden = false;
+function populateNames() {
+  const cls = $("cls").value, nameSelect = $("name");
+  nameSelect.innerHTML = '<option value="">— O‘quvchini tanlang —</option>';
+  if (!cls) { nameSelect.disabled = true; return; }
+  const done = {};
+  all.forEach(r => { if (r.date === today() && r.cls === cls) done[norm(r.name)] = true; });
+  ROSTER[cls].forEach(name => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name + (done[norm(name)] ? " — bugun belgilangan" : "");
+    nameSelect.appendChild(option);
+  });
+  nameSelect.disabled = false;
 }
-$("res").onclick = e => {
-  const b = e.target.closest("button");
-  if (!b) return;
-  pickedName = b.dataset.n; $("name").value = pickedName; $("res").hidden = true;
-  $("picked").textContent = "Tanlandi: " + pickedName + " (" + $("cls").value + ")"; $("picked").hidden = false;
-};
-$("name").addEventListener("input", () => { pickedName = null; $("picked").hidden = true; showRes(); });
-$("name").addEventListener("focus", showRes);
-$("cls").addEventListener("change", () => { pickedName = null; $("name").value = ""; $("picked").hidden = true; showRes(); });
+$("cls").addEventListener("change", populateNames);
 
 const EXAMPLES = ["Kasal bo’lib qolgan", "Shifokor qabulida bo’lgan", "Transport kechikdi", "Yo’lda tirbandlik / avariya", "Qor-yomg’ir, yo’l yopilgan", "Uyda favqulodda holat", "Ota-onasi maktabga olib keldi"];
 $("chips").innerHTML = EXAMPLES.map(t => '<button type="button" class="ghost" data-t="' + t + '">' + t + "</button>").join("");
