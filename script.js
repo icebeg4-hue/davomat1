@@ -10,6 +10,17 @@ let wheelInputs = {}, activeWheelInput = null, wheelState = null, wheelScrollTim
 const keyOf = r => (r.name || "").trim().toLowerCase().replace(/\s+/g, " ") + "|" + (r.cls || "").trim().toLowerCase();
 const q = v => '"' + String(v).replace(/"/g, '""') + '"';
 
+const downloadWindows = document.getElementById("downloadWindows");
+if (downloadWindows) {
+  downloadWindows.addEventListener("click", event => {
+    const proceed = window.confirm(
+      "Bu o'rnatish fayli Windows SmartScreen tomonidan vaqtincha noma'lum deb ko'rsatilishi mumkin, chunki fayl tijorat raqamli sertifikatiga ega emas.\n\n" +
+      "SmartScreen oynasida:\n1. «Подробнее» ni bosing.\n2. «Выполнить в любом случае» yoki «Run anyway» ni tanlang.\n\nDavom ettirasizmi?"
+    );
+    if (!proceed) event.preventDefault();
+  });
+}
+
 function activateSection(tabId, focusTab) {
   const tabs = Array.from(document.querySelectorAll(".section-tab"));
   tabs.forEach(tab => {

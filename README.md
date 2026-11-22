@@ -26,6 +26,7 @@ Kechikkan o‘quvchilarni sinf, sana, vaqt va sabab bo‘yicha qayd etuvchi mobi
 ## Windows va PWA
 
 - Windows o‘rnatish fayli: [`Maktab-Davomat-Nazorati-Setup.exe`](Maktab-Davomat-Nazorati-Setup.exe).
+- Setup hozirda tijorat kod-signing sertifikatisiz qurilgan. Windows SmartScreen `noma'lum nashriyot` haqida ogohlantirsa, `Подробнее` -> `Выполнить в любом случае` ni tanlang.
 - Brauzerda saytni oching, keyin brauzer menyusidan **Ilovani o‘rnatish** yoki **Install app** ni tanlang.
 - Ilova ikonasi uchun `icons/icon-512.png` va PWA fayllari `manifest.webmanifest`, `sw.js` ishlatiladi.
 
