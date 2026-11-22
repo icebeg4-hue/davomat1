@@ -26,7 +26,7 @@ if (downloadApk) {
   downloadApk.addEventListener("click", async event => {
     event.preventDefault();
     const url =
-      "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk?download=1.0.4";
+      "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk?download=1.0.5";
     try {
       const response = await fetch(url, { cache: "no-store" });
       if (!response.ok) throw new Error("APK yuklab olinmadi");
@@ -34,7 +34,7 @@ if (downloadApk) {
       const objectUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = objectUrl;
-      link.download = "Maktab-Davomat-1.0.4.apk";
+      link.download = "Maktab-Davomat-1.0.5.apk";
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -49,6 +49,11 @@ if (downloadApk) {
 const updateWrap = document.getElementById("appUpdateWrap");
 const updateStatus = document.getElementById("appUpdateStatus");
 const updateButton = document.getElementById("appUpdateButton");
+const forceUpdateBackdrop = document.getElementById("forceUpdateBackdrop");
+const forceUpdateStatus = document.getElementById("forceUpdateStatus");
+const forceUpdateButton = document.getElementById("forceUpdateButton");
+const isNativeApp = Boolean(window.Capacitor?.isNativePlatform?.());
+if (isNativeApp) document.body.classList.add("native-app");
 
 async function checkAppUpdate() {
   const appUpdater = window.Capacitor?.Plugins?.AppUpdater;
@@ -65,6 +70,32 @@ async function checkAppUpdate() {
     const update = await response.json();
     const currentCode = Number(info.versionCode || 0);
     if (Number(update.versionCode) > currentCode) {
+      if (isNativeApp && forceUpdateBackdrop) {
+        forceUpdateBackdrop.hidden = false;
+        if (forceUpdateStatus) {
+          forceUpdateStatus.textContent =
+            "Yangi " + update.version + " versiyasi mavjud. Ilovani ishlatish uchun yangilang.";
+        }
+        if (forceUpdateButton) {
+          forceUpdateButton.onclick = async () => {
+            forceUpdateButton.disabled = true;
+            forceUpdateStatus.textContent = "Yangilanish yuklanmoqda...";
+            try {
+              await appUpdater.downloadAndInstall({
+                url: update.apkUrl + "?v=" + update.versionCode,
+                sha256: update.sha256
+              });
+              forceUpdateStatus.textContent =
+                "Yuklash tugadi. Telefon o‘rnatishni tasdiqlang.";
+            } catch (error) {
+              forceUpdateStatus.textContent =
+                "Yangilanishni yuklab bo‘lmadi. Internetni tekshirib qayta urinib ko‘ring.";
+            } finally {
+              forceUpdateButton.disabled = false;
+            }
+          };
+        }
+      }
       if (updateStatus) {
         updateStatus.textContent =
           "Yangi versiya " + update.version + " mavjud." +

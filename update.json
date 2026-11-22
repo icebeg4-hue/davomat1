@@ -1,7 +1,7 @@
 {
-  "version": "1.0.4",
-  "versionCode": 5,
+  "version": "1.0.5",
+  "versionCode": 6,
   "apkUrl": "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk",
-  "sha256": "C930C736D329D33CD7D8538B89A476F38EA86AD538B47EF1F42D8B10E9B58D9D",
-  "releaseNotes": "Ilovaning ichki yangilanish tekshiruvi kuchaytirildi."
+  "sha256": "A80B48006CC36A67C3487A3FB6B62D2187D3989479C6588E99541755BEDEEA73",
+  "releaseNotes": "Ilova ochilganda majburiy yangilanish tekshiruvi qo‘shildi."
 }

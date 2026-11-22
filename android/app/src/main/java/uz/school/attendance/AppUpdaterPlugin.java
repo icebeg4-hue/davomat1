@@ -69,14 +69,13 @@ public class AppUpdaterPlugin extends Plugin {
                 (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
             long id = manager.enqueue(request);
 
-            call.resolve();
-            waitForDownload(manager, id, apk, expectedSha256);
+            waitForDownload(manager, id, apk, expectedSha256, call);
         } catch (Exception error) {
             call.reject(error.getMessage());
         }
     }
 
-    private void waitForDownload(DownloadManager manager, long id, File apk, String expectedSha256) {
+    private void waitForDownload(DownloadManager manager, long id, File apk, String expectedSha256, PluginCall call) {
         new Thread(() -> {
             boolean complete = false;
             while (!complete) {
@@ -87,7 +86,12 @@ public class AppUpdaterPlugin extends Plugin {
                             cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)
                         );
                         if (status == DownloadManager.STATUS_SUCCESSFUL) complete = true;
-                        if (status == DownloadManager.STATUS_FAILED) return;
+                        if (status == DownloadManager.STATUS_FAILED) {
+                            getActivity().runOnUiThread(() ->
+                                call.reject("APK yuklab olinmadi.")
+                            );
+                            return;
+                        }
                     }
                 } catch (Exception ignored) {
                     return;
@@ -97,8 +101,12 @@ public class AppUpdaterPlugin extends Plugin {
                 }
             }
             getActivity().runOnUiThread(() -> {
-                if (!verifySha256(apk, expectedSha256)) return;
+                if (!verifySha256(apk, expectedSha256)) {
+                    call.reject("APK xavfsizlik tekshiruvdan o‘tmadi.");
+                    return;
+                }
                 installApk(apk);
+                call.resolve();
             });
         }).start();
     }

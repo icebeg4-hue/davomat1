@@ -11,6 +11,12 @@ main{max-width:720px;margin:0 auto;padding:16px}
 .app-update-wrap{margin:16px 0;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
 .app-update-wrap h2{margin:0 0 8px}
 .app-update-wrap .primary{margin-top:10px}
+.native-app .apk-download-wrap{display:none!important}
+.force-update-backdrop{position:fixed;inset:0;z-index:2000;background:rgba(15,23,42,.78);display:flex;align-items:center;justify-content:center;padding:20px}
+.force-update-dialog{width:min(420px,100%);background:var(--card);color:var(--text);border-radius:18px;padding:22px;border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.28)}
+.force-update-dialog h2{margin:0 0 10px}
+.force-update-dialog p{margin:0 0 16px;line-height:1.45}
+.force-update-dialog .primary{width:100%;min-height:48px}
 .download-buttons{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch;width:100%;gap:10px}
 .download-buttons>a.primary{display:flex!important;flex:1 1 0!important;width:50%!important;max-width:50%!important;min-width:0!important;align-items:center;justify-content:center;min-height:48px;text-decoration:none;border-radius:12px;padding:12px 10px;text-align:center}
 h1{font-size:1.4rem;margin:8px 0 2px}
@@ -267,7 +273,6 @@ input,select{border-color:var(--line)}input:focus,select:focus{border-color:#8b8
 .early-photo-thumb{width:64px;height:64px;object-fit:cover;border-radius:6px}
 .early-add{width:100%}
 @media(max-width:700px){
-  .apk-download-wrap{display:none!important;}
   .early-form{grid-template-columns:minmax(0,1fr)}
   .early-note,.early-photo-field,.early-add{grid-column:1}
   #earlyRows td:nth-child(5){grid-column:2/4;grid-row:3}
