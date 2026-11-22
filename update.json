@@ -1,7 +1,7 @@
 {
-  "version": "1.0.6",
-  "versionCode": 7,
+  "version": "1.0.7",
+  "versionCode": 8,
   "apkUrl": "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk",
-  "sha256": "27F06705223E55FB382B0B60A2B71481FD125FE6F515E7642AB1BBBEBBAED251",
-  "releaseNotes": "Androidda Excel ro‘yxatlari yuklash xatosi tuzatildi."
+  "sha256": "742BB529B992150A4288D467CDC1DC53569B13779774F870E973210BBFD56BA4",
+  "releaseNotes": "Rasmiy release imzosi bilan chiqarilgan APK."
 }
