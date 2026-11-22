@@ -1,7 +1,7 @@
 {
-  "version": "1.0.5",
-  "versionCode": 6,
+  "version": "1.0.6",
+  "versionCode": 7,
   "apkUrl": "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk",
-  "sha256": "A80B48006CC36A67C3487A3FB6B62D2187D3989479C6588E99541755BEDEEA73",
-  "releaseNotes": "Ilova ochilganda majburiy yangilanish tekshiruvi qo‘shildi."
+  "sha256": "27F06705223E55FB382B0B60A2B71481FD125FE6F515E7642AB1BBBEBBAED251",
+  "releaseNotes": "Androidda Excel ro‘yxatlari yuklash xatosi tuzatildi."
 }

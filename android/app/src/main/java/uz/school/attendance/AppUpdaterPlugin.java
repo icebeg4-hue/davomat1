@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
+import android.content.ContentValues;
+import android.provider.MediaStore;
 import androidx.core.content.FileProvider;
 
 import com.getcapacitor.JSObject;
@@ -20,6 +22,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.util.Locale;
+import java.io.OutputStream;
+import android.util.Base64;
 
 @CapacitorPlugin(name = "AppUpdater")
 public class AppUpdaterPlugin extends Plugin {
@@ -160,6 +164,63 @@ public class AppUpdaterPlugin extends Plugin {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         getContext().startActivity(intent);
+    }
+
+    @PluginMethod
+    public void saveFile(PluginCall call) {
+        String fileName = call.getString("fileName");
+        String base64 = call.getString("base64");
+        if (fileName == null || base64 == null) {
+            call.reject("Fayl ma’lumotlari to‘liq emas.");
+            return;
+        }
+
+        try {
+            byte[] bytes = Base64.decode(base64, Base64.DEFAULT);
+            Uri uri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+                values.put(MediaStore.Downloads.MIME_TYPE,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                values.put(MediaStore.Downloads.RELATIVE_PATH,
+                    Environment.DIRECTORY_DOWNLOADS);
+                values.put(MediaStore.Downloads.IS_PENDING, 1);
+                uri = getContext().getContentResolver().insert(
+                    MediaStore.Downloads.EXTERNAL_CONTENT_URI, values
+                );
+                if (uri == null) throw new Exception("Fayl yaratilmadi.");
+                try (OutputStream output =
+                         getContext().getContentResolver().openOutputStream(uri)) {
+                    if (output == null) throw new Exception("Faylga yozib bo‘lmadi.");
+                    output.write(bytes);
+                    output.flush();
+                }
+                values.clear();
+                values.put(MediaStore.Downloads.IS_PENDING, 0);
+                getContext().getContentResolver().update(uri, values, null, null);
+            } else {
+                File downloads = getContext().getExternalFilesDir(
+                    Environment.DIRECTORY_DOWNLOADS
+                );
+                if (!downloads.exists() && !downloads.mkdirs()) {
+                    throw new Exception("Downloads papkasi ochilmadi.");
+                }
+                File file = new File(downloads, fileName);
+                try (java.io.FileOutputStream output =
+                         new java.io.FileOutputStream(file)) {
+                    output.write(bytes);
+                }
+                uri = Uri.fromFile(file);
+            }
+
+            JSObject result = new JSObject();
+            result.put("fileName", fileName);
+            result.put("uri", uri.toString());
+            call.resolve(result);
+        } catch (Exception error) {
+            call.reject(error.getMessage());
+        }
     }
 
     @Override

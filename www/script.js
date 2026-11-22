@@ -26,7 +26,7 @@ if (downloadApk) {
   downloadApk.addEventListener("click", async event => {
     event.preventDefault();
     const url =
-      "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk?download=1.0.5";
+      "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk?download=1.0.6";
     try {
       const response = await fetch(url, { cache: "no-store" });
       if (!response.ok) throw new Error("APK yuklab olinmadi");
@@ -34,7 +34,7 @@ if (downloadApk) {
       const objectUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = objectUrl;
-      link.download = "Maktab-Davomat-1.0.5.apk";
+      link.download = "Maktab-Davomat-1.0.6.apk";
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -319,6 +319,25 @@ async function downloadXlsx(filename, data) {
   const blob = new Blob([data], {
     type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
   });
+
+  const savePlugin = window.Capacitor?.Plugins?.AppUpdater;
+  if (window.Capacitor?.isNativePlatform?.() && savePlugin?.saveFile) {
+    const bytes = data instanceof ArrayBuffer
+      ? new Uint8Array(data)
+      : data instanceof Uint8Array
+        ? data
+        : new Uint8Array(await blob.arrayBuffer());
+    let binary = "";
+    const chunkSize = 0x8000;
+    for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(offset, offset + chunkSize));
+    }
+    await savePlugin.saveFile({
+      fileName: filename,
+      base64: btoa(binary)
+    });
+    return;
+  }
 
   const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   if (ios && typeof navigator.share === "function" && typeof navigator.canShare === "function" && typeof File !== "undefined") {
