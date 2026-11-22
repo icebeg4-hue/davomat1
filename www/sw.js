@@ -1,4 +1,4 @@
-const CACHE_NAME = "davomat-v4";
+const CACHE_NAME = "davomat-v5";
 const ASSETS = [
   "./",
   "./index.html",

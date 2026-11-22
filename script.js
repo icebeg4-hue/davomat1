@@ -51,7 +51,10 @@ async function checkAppUpdate() {
           updateButton.disabled = true;
           updateStatus.textContent = "Yangilanish yuklanmoqda...";
           try {
-            await appUpdater.downloadAndInstall({ url: update.apkUrl });
+            await appUpdater.downloadAndInstall({
+              url: update.apkUrl + "?v=" + update.versionCode,
+              sha256: update.sha256
+            });
             updateStatus.textContent =
               "Yuklash tugadi. Telefon o‘rnatishni tasdiqlang.";
           } catch (error) {
@@ -767,6 +770,9 @@ $("dlall").onclick = async () => {
 
 loadLocal(); setState(); render();
 checkAppUpdate();
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) checkAppUpdate();
+});
 (async () => {
   try {
     const db = await claude.use("db");

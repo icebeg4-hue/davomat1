@@ -17,6 +17,9 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.security.MessageDigest;
+import java.util.Locale;
 
 @CapacitorPlugin(name = "AppUpdater")
 public class AppUpdaterPlugin extends Plugin {
@@ -41,6 +44,7 @@ public class AppUpdaterPlugin extends Plugin {
     @PluginMethod
     public void downloadAndInstall(PluginCall call) {
         String url = call.getString("url");
+        String expectedSha256 = call.getString("sha256");
         if (url == null || url.trim().isEmpty()) {
             call.reject("APK manzili berilmadi.");
             return;
@@ -66,13 +70,13 @@ public class AppUpdaterPlugin extends Plugin {
             long id = manager.enqueue(request);
 
             call.resolve();
-            waitForDownload(manager, id, apk);
+            waitForDownload(manager, id, apk, expectedSha256);
         } catch (Exception error) {
             call.reject(error.getMessage());
         }
     }
 
-    private void waitForDownload(DownloadManager manager, long id, File apk) {
+    private void waitForDownload(DownloadManager manager, long id, File apk, String expectedSha256) {
         new Thread(() -> {
             boolean complete = false;
             while (!complete) {
@@ -92,8 +96,30 @@ public class AppUpdaterPlugin extends Plugin {
                     try { Thread.sleep(500); } catch (InterruptedException ignored) { return; }
                 }
             }
-            getActivity().runOnUiThread(() -> installApk(apk));
+            getActivity().runOnUiThread(() -> {
+                if (!verifySha256(apk, expectedSha256)) return;
+                installApk(apk);
+            });
         }).start();
+    }
+
+    private boolean verifySha256(File apk, String expectedSha256) {
+        if (apk == null || !apk.isFile() || expectedSha256 == null) return false;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            try (FileInputStream input = new FileInputStream(apk)) {
+                byte[] buffer = new byte[8192];
+                int read;
+                while ((read = input.read(buffer)) != -1) digest.update(buffer, 0, read);
+            }
+            StringBuilder hex = new StringBuilder();
+            for (byte value : digest.digest()) {
+                hex.append(String.format(Locale.US, "%02x", value));
+            }
+            return hex.toString().equals(expectedSha256.trim().toLowerCase(Locale.US));
+        } catch (Exception error) {
+            return false;
+        }
     }
 
     private void installApk(File apk) {
