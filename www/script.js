@@ -21,6 +21,31 @@ if (downloadWindows) {
   });
 }
 
+const downloadApk = document.getElementById("downloadApk");
+if (downloadApk) {
+  downloadApk.addEventListener("click", async event => {
+    event.preventDefault();
+    const url =
+      "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk?download=1.0.4";
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error("APK yuklab olinmadi");
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = "Maktab-Davomat-1.0.4.apk";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 30000);
+    } catch (error) {
+      window.location.href =
+        "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk";
+    }
+  });
+}
+
 const updateWrap = document.getElementById("appUpdateWrap");
 const updateStatus = document.getElementById("appUpdateStatus");
 const updateButton = document.getElementById("appUpdateButton");
