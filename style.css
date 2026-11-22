@@ -264,6 +264,7 @@ input,select{border-color:var(--line)}input:focus,select:focus{border-color:#8b8
 .early-photo-thumb{width:64px;height:64px;object-fit:cover;border-radius:6px}
 .early-add{width:100%}
 @media(max-width:700px){
+  .apk-download-wrap{display:none!important;}
   .early-form{grid-template-columns:minmax(0,1fr)}
   .early-note,.early-photo-field,.early-add{grid-column:1}
   #earlyRows td:nth-child(5){grid-column:2/4;grid-row:3}
