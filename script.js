@@ -26,7 +26,7 @@ if (downloadApk) {
   downloadApk.addEventListener("click", async event => {
     event.preventDefault();
     const url =
-      "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk?download=1.0.7";
+      "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk?download=1.0.8";
     try {
       const response = await fetch(url, { cache: "no-store" });
       if (!response.ok) throw new Error("APK yuklab olinmadi");
@@ -34,7 +34,7 @@ if (downloadApk) {
       const objectUrl = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = objectUrl;
-      link.download = "Maktab-Davomat-1.0.7.apk";
+      link.download = "Maktab-Davomat-1.0.8.apk";
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -81,12 +81,11 @@ async function checkAppUpdate() {
             forceUpdateButton.disabled = true;
             forceUpdateStatus.textContent = "Yangilanish yuklanmoqda...";
             try {
-              await appUpdater.downloadAndInstall({
-                url: update.apkUrl + "?v=" + update.versionCode,
-                sha256: update.sha256
+              await appUpdater.openUpdate({
+                url: update.apkUrl + "?v=" + update.versionCode
               });
               forceUpdateStatus.textContent =
-                "Yuklash tugadi. Telefon o‘rnatishni tasdiqlang.";
+                "Brauzer ochildi. Yangilash APKni yuklab o‘rnating.";
             } catch (error) {
               forceUpdateStatus.textContent =
                 "Yangilanishni yuklab bo‘lmadi. Internetni tekshirib qayta urinib ko‘ring.";
@@ -107,12 +106,11 @@ async function checkAppUpdate() {
           updateButton.disabled = true;
           updateStatus.textContent = "Yangilanish yuklanmoqda...";
           try {
-            await appUpdater.downloadAndInstall({
-              url: update.apkUrl + "?v=" + update.versionCode,
-              sha256: update.sha256
+            await appUpdater.openUpdate({
+              url: update.apkUrl + "?v=" + update.versionCode
             });
             updateStatus.textContent =
-              "Yuklash tugadi. Telefon o‘rnatishni tasdiqlang.";
+              "Brauzer ochildi. Yangilash APKni yuklab o‘rnating.";
           } catch (error) {
             updateStatus.textContent =
               "Yangilanishni yuklab bo‘lmadi: " +

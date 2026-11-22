@@ -1,7 +1,7 @@
 {
-  "version": "1.0.7",
-  "versionCode": 8,
+  "version": "1.0.8",
+  "versionCode": 9,
   "apkUrl": "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/Maktab-Davomat.apk",
-  "sha256": "742BB529B992150A4288D467CDC1DC53569B13779774F870E973210BBFD56BA4",
-  "releaseNotes": "Rasmiy release imzosi bilan chiqarilgan APK."
+  "sha256": "5AA89AEBB6DDD04CC7823A85E6AA6E9311E7547081B97750B52F92FFC3B8E046",
+  "releaseNotes": "Xavfsizlik tahlili uchun shubhali APK o‘rnatish ruxsati olib tashlandi."
 }

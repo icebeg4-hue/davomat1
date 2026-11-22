@@ -19,8 +19,7 @@ Kechikkan o‘quvchilarni sinf, sana, vaqt va sabab bo‘yicha qayd etuvchi mobi
 
 ## Android APK
 
-- Tayyor APK (versiya 1.0.7, versionCode 8): [`Maktab-Davomat.apk`](Maktab-Davomat.apk).
-- Google Play uchun rasmiy imzolangan Android App Bundle: [`Maktab-Davomat.aab`](Maktab-Davomat.aab).
+- Tayyor APK (versiya 1.0.8, versionCode 9): [`Maktab-Davomat.apk`](Maktab-Davomat.apk).
 - Android loyihasining manba kodi [`android-source.zip`](android-source.zip) arxivida.
 - Ilovani qayta yig‘ish uchun arxivni loyiha ildiziga oching, so‘ng Node.js, JDK 21 va Android SDK bilan `npm install` va `npx cap sync android` buyrug‘ini bajaring. Keyin `android/` papkasida `gradlew assembleDebug` buyrug‘ini ishga tushiring.
 
