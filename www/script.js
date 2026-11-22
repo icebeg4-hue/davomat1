@@ -21,6 +21,61 @@ if (downloadWindows) {
   });
 }
 
+const updateWrap = document.getElementById("appUpdateWrap");
+const updateStatus = document.getElementById("appUpdateStatus");
+const updateButton = document.getElementById("appUpdateButton");
+
+async function checkAppUpdate() {
+  const appUpdater = window.Capacitor?.Plugins?.AppUpdater;
+  if (!window.Capacitor?.isNativePlatform?.() || !appUpdater) return;
+  if (updateWrap) updateWrap.hidden = false;
+  try {
+    const info = await appUpdater.getInfo();
+    const response = await fetch(
+      "https://raw.githubusercontent.com/icebeg4-hue/davomat1/main/update.json?cache=" +
+      Date.now(),
+      { cache: "no-store" }
+    );
+    if (!response.ok) throw new Error("Yangilanish ro‘yxati ochilmadi");
+    const update = await response.json();
+    const currentCode = Number(info.versionCode || 0);
+    if (Number(update.versionCode) > currentCode) {
+      if (updateStatus) {
+        updateStatus.textContent =
+          "Yangi versiya " + update.version + " mavjud." +
+          (update.releaseNotes ? " " + update.releaseNotes : "");
+      }
+      if (updateButton) {
+        updateButton.hidden = false;
+        updateButton.onclick = async () => {
+          updateButton.disabled = true;
+          updateStatus.textContent = "Yangilanish yuklanmoqda...";
+          try {
+            await appUpdater.downloadAndInstall({ url: update.apkUrl });
+            updateStatus.textContent =
+              "Yuklash tugadi. Telefon o‘rnatishni tasdiqlang.";
+          } catch (error) {
+            updateStatus.textContent =
+              "Yangilanishni yuklab bo‘lmadi: " +
+              (error?.message || "Noma’lum xato");
+          } finally {
+            updateButton.disabled = false;
+          }
+        };
+      }
+    } else if (updateStatus) {
+      updateStatus.textContent =
+        "Ilova eng so‘nggi versiyada (" + info.versionName + ").";
+    }
+  } catch (error) {
+    if (updateStatus) {
+      updateStatus.textContent =
+        "Yangilanish tekshirilmadi: " +
+        (error?.message || "Internetga ulanishni tekshiring");
+    }
+  }
+}
+
 function activateSection(tabId, focusTab) {
   const tabs = Array.from(document.querySelectorAll(".section-tab"));
   tabs.forEach(tab => {
@@ -711,6 +766,7 @@ $("dlall").onclick = async () => {
 };
 
 loadLocal(); setState(); render();
+checkAppUpdate();
 (async () => {
   try {
     const db = await claude.use("db");

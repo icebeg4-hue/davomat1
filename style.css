@@ -8,6 +8,9 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.4;-webkit-text-size-adjust:100%}
 main{max-width:720px;margin:0 auto;padding:16px}
 .apk-download-wrap{margin:16px 0}
+.app-update-wrap{margin:16px 0;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.app-update-wrap h2{margin:0 0 8px}
+.app-update-wrap .primary{margin-top:10px}
 .download-buttons{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:stretch;width:100%;gap:10px}
 .download-buttons>a.primary{display:flex!important;flex:1 1 0!important;width:50%!important;max-width:50%!important;min-width:0!important;align-items:center;justify-content:center;min-height:48px;text-decoration:none;border-radius:12px;padding:12px 10px;text-align:center}
 h1{font-size:1.4rem;margin:8px 0 2px}
